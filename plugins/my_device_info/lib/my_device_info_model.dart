@@ -29,6 +29,6 @@ class MyDeviceInfoModel {
     "model": model,
     "id": id,
     "brand": brand,
-    "device": version,
+    "version": version,
   };
 }

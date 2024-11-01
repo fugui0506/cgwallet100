@@ -1,16 +1,19 @@
-name: my_device_info
+name: my_utils
 description: "A new Flutter plugin project."
 version: 0.0.1
 #homepage:
 
 environment:
-  sdk: ^3.5.3
+  sdk: ^3.5.4
   flutter: '>=3.3.0'
 
 dependencies:
   flutter:
     sdk: flutter
   plugin_platform_interface: ^2.1.8
+
+  # 加密
+  encrypt: ^5.0.3
 
 dev_dependencies:
   flutter_test:
@@ -34,11 +37,14 @@ flutter:
   # adding or updating assets for this project.
   plugin:
     platforms:
-      android:
-        package: com.example.my_device_info
-        pluginClass: MyDeviceInfoPlugin
-      ios:
-        pluginClass: MyDeviceInfoPlugin
+    # This plugin project was generated without specifying any
+    # platforms with the `--platform` argument. If you see the `some_platform` map below, remove it and
+    # then add platforms following the instruction here:
+    # https://flutter.dev/to/pubspec-plugin-platforms
+    # -------------------
+      some_platform:
+        pluginClass: somePluginClass
+    # -------------------
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

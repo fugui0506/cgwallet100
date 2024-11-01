@@ -12,10 +12,13 @@ class MethodChannelMyDeviceInfo extends MyDeviceInfoPlatform {
   @visibleForTesting
   final methodChannel = const MethodChannel('my_device_info');
 
+  get log => null;
+
   @override
   Future<MyDeviceInfoModel> getDeviceInfo() async {
     final version = await methodChannel.invokeMethod('getDeviceInfo');
     final jsonStr = jsonEncode(version);
+    // debugPrint('通道 => 获取到设备信息 -> $jsonStr');
     final json = jsonDecode(jsonStr);
     final MyDeviceInfoModel myDeviceInfo = MyDeviceInfoModel.fromJson(json);
     return myDeviceInfo;
