@@ -43,10 +43,26 @@ extension StringExtension on String {
   /// 校验中文名字
   bool isChineseName() => RegExp(r'^[\u4e00-\u9fa5·]{2,20}$').hasMatch(this);
 
-  /// toStringAsFixed
+  /// 保留小数位
   String fixed(int fractionDigits) {
-    if(!isNumber()) return this;
-    return double.parse(this).toStringAsFixed(fractionDigits);
+    if (!isNumber()) return this;
+
+    if (fractionDigits <= 0) {
+      return split('.').first;
+    }
+
+    int dotIndex = indexOf('.');
+
+    if (dotIndex == -1) {
+      return '$this.${'0' * fractionDigits}';
+    } else {
+      int decimalLength = length - dotIndex - 1;
+      if (decimalLength >= fractionDigits) {
+        return substring(0, dotIndex + fractionDigits + 1);
+      } else {
+        return this + '0' * (fractionDigits - decimalLength);
+      }
+    }
   }
 
   /// 格式化 JSON
@@ -100,14 +116,17 @@ extension StringExtension on String {
 
   /// 隐藏中间字符串的中间部分
   String hideMiddle(int keepStartLength, int keepEndLength) {
-    if (length <= keepStartLength + keepEndLength) {
+    final keepStart = keepStartLength < 0 ? 0 : keepStartLength;
+    final keepEnd = keepEndLength < 0 ? 0 : keepEndLength;
+
+    if (length <= keepStart + keepEnd) {
       // 如果字符串长度小于或等于要显示的字符总数，则不做处理
       return this;
     }
 
-    String start = substring(0, keepStartLength);
-    String end = substring(length - keepEndLength);
-    String ellipsis = List.filled(length - keepStartLength - keepEndLength, '*').join();
+    String start = substring(0, keepStart);
+    String end = substring(length - keepEnd);
+    String ellipsis = List.filled(length - keepStart - keepEnd, '*').join();
     return '$start$ellipsis$end';
   }
 

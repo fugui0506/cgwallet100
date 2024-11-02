@@ -15,24 +15,27 @@ class MyUint8 {
     } else if (data is String) {
       jsonString = data;
     } else {
-      throw ArgumentError('Unsupported input type');
+      jsonString = '$data';
     }
 
-    // 使用 Gzip 压缩字符串
-    List<int> stringBytes = utf8.encode(jsonString);
-    List<int> compressedBytes = gzip.encode(stringBytes);
+    try {
+      List<int> stringBytes = utf8.encode(jsonString);
+      List<int> compressedBytes = gzip.encode(stringBytes);
 
-    return Uint8List.fromList(compressedBytes);
+      return Uint8List.fromList(compressedBytes);
+    } catch (e) {
+      return Uint8List.fromList([]);
+    }
   }
 
   /// 二进制数组转字符串
-  static String decode(Uint8List data) {
-    // 尝试解压缩数据
-    List<int> decompressedData = zlib.decode(data);
-    String jsonString = utf8.decode(decompressedData);
-    // Map<String,dynamic> jsonData = json.decode(jsonString);
-
-    // 将解压缩后的数据转换为字符串
-    return jsonString;
+  static String decode(dynamic data) {
+    try {
+      List<int> decompressedData = zlib.decode(data);
+      String jsonString = utf8.decode(decompressedData);
+      return jsonString;
+    } catch (e) {
+      return '';
+    }
   }
 }
