@@ -1,6 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:developer';
 import 'dart:typed_data';
+
+import 'package:archive/archive.dart';
 
 class MyUint8 {
   /// 字符串转二进制数组
@@ -20,10 +22,10 @@ class MyUint8 {
 
     try {
       List<int> stringBytes = utf8.encode(jsonString);
-      List<int> compressedBytes = gzip.encode(stringBytes);
-
-      return Uint8List.fromList(compressedBytes);
+      List<int>? compressedBytes = GZipEncoder().encode(stringBytes);
+      return Uint8List.fromList(compressedBytes ?? []);
     } catch (e) {
+      log('二进制压缩失败 --> $e');
       return Uint8List.fromList([]);
     }
   }
@@ -31,10 +33,12 @@ class MyUint8 {
   /// 二进制数组转字符串
   static String decode(dynamic data) {
     try {
-      List<int> decompressedData = zlib.decode(data);
+      final bytes = List<int>.from(data);
+      List<int> decompressedData = GZipDecoder().decodeBytes(bytes);
       String jsonString = utf8.decode(decompressedData);
       return jsonString;
     } catch (e) {
+      log('二进制解压缩失败 --> $e');
       return '';
     }
   }

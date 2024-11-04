@@ -2,7 +2,6 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'my_utils_method_channel.dart';
 
-
 abstract class MyUtilsPlatform extends PlatformInterface {
   /// Constructs a MyUtilsPlatform.
   MyUtilsPlatform() : super(token: _token);

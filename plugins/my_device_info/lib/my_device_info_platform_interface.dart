@@ -1,6 +1,6 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import '../models/my_device_info_model.dart';
+import 'models/my_device_info_model.dart';
 import 'my_device_info_method_channel.dart';
 
 abstract class MyDeviceInfoPlatform extends PlatformInterface {

@@ -19,7 +19,7 @@ public class MyDeviceInfoPlugin: NSObject, FlutterPlugin {
             deviceInfo["model"] = getDeviceModel()
 
             // 系统版本 (iOS 14 18)
-            deviceInfo["version"] = "IOS \(UIDevice.current.systemVersion)"
+            deviceInfo["systemVersion"] = "IOS \(UIDevice.current.systemVersion)"
 
             // 设备ID (识别码)
             if let identifierForVendor = UIDevice.current.identifierForVendor?.uuidString {

@@ -1,12 +1,13 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cgwallet100/common/common.dart';
 import 'package:flutter/material.dart';
-import 'package:my_utils/my_utils.dart';
-// import 'package:my_utils/utils/my_uint8.dart';
-// import 'package:my_device_info/my_device_info.dart';
-
-// import 'common/common.dart';
+import 'package:my_device_info/my_device_info.dart';
+import 'package:my_utils/utils/my_cache.dart';
+import 'package:my_utils/utils/my_environment.dart';
+import 'package:my_utils/utils/my_string.dart';
+import 'package:my_utils/utils/my_uint8.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,7 +41,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<String> wssUrls = [];
   List<String> baseUrls = [];
-
+  final cache = MyCache();
 
   @override
   Widget build(BuildContext context) {
@@ -56,18 +57,29 @@ class _MyHomePageState extends State<MyHomePage> {
           runSpacing: 10,
           children: <Widget>[
             FilledButton(
+              onPressed: ()  async {
+                final info = await MyDeviceInfo.getDeviceInfo();
+
+                log('设备配置信息 --> ${info.toJson()}');
+              },
+              child: const Text('获取设备信息'),
+            ),
+            FilledButton(
                 onPressed: ()  async {
                   final environment = MyEnvironment.instance;
                   final env = await environment.initialize();
+
                   String info = '';
                   switch(env) {
                     case Environment.test:
                       info = await environment.getConfig(MyConfig.urls.testUrls);
                       break;
                     case Environment.pre:
+
                       info = await environment.getConfig(MyConfig.urls.preUrls);
                       break;
                     case Environment.rel:
+
                       info = await environment.getConfig(MyConfig.urls.relUrls);
                       break;
                     case Environment.grey:
@@ -154,7 +166,33 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text('格式化JSON输出'),
             ),
 
+            FilledButton(
+              onPressed: ()  async {
+                await cache.putFile('cache_shared_test', '1123123', maxAge: Duration(seconds: 30));
+              },
+              child: const Text('缓存自定义数据'),
+            ),
 
+            FilledButton(onPressed: () async {
+              final result = await cache.getFile('cache_shared_test');
+
+              if (result == null) {
+                log('获取缓存数据 -> null');
+                return;
+              }
+
+              final data = await result.readAsBytes();
+              final string = utf8.decode(data);
+              log('获取缓存数据 -> $string');
+            }, child: const Text('获取缓存数据')),
+
+            FilledButton(onPressed: () async {
+              await cache.clear();
+            }, child: const Text('清理所有缓存')),
+
+            FilledButton(onPressed: () async {
+              await cache.getSingleFile('https://bce.bdstatic.com/p3m/common-service/uploads/dibu_edc2214.png');
+            }, child: const Text('获取网络缓存')),
           ],
         ),
       ),// This trailing comma makes auto-formatting nicer for build methods.

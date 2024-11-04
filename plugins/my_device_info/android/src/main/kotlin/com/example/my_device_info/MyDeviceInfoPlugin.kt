@@ -37,7 +37,7 @@ class MyDeviceInfoPlugin: FlutterPlugin, MethodCallHandler {
       build["model"] = Build.MODEL
 
       // 系统版本（Android 9 28)
-      build["version"] = "Android ${Build.VERSION.RELEASE} ${Build.VERSION.SDK_INT}"
+      build["systemVersion"] = "Android ${Build.VERSION.RELEASE} ${Build.VERSION.SDK_INT}"
 
       // 设备ID (识别码)
       build["id"] = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID) ?: "Unknown"

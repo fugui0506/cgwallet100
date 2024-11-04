@@ -1,34 +1,45 @@
 class MyDeviceInfoModel {
   String brand;
   String model;
-  String version;
+  String systemVersion;
   String id;
+
+  String appName;
+  String appVersion;
 
   MyDeviceInfoModel({
     required this.model,
     required this.id,
     required this.brand,
-    required this.version,
+    required this.systemVersion,
+    required this.appName,
+    required this.appVersion,
   });
   
   factory MyDeviceInfoModel.fromJson(Map<String, dynamic> json) => MyDeviceInfoModel(
     model: json["model"] ?? '',
     id: json["id"] ?? '',
     brand: json["brand"] ?? '',
-    version: json["version"] ?? '',
+    systemVersion: json["systemVersion"] ?? '',
+    appName: json["appName"] ?? '',
+    appVersion: json["appVersion"] ?? '',
   );
 
   factory MyDeviceInfoModel.empty() => MyDeviceInfoModel(
     model: '',
     id: '',
     brand: '',
-    version: '',
+    systemVersion: '',
+    appName: '',
+    appVersion: '',
   );
 
   Map<String, dynamic> toJson() => {
     "model": model,
     "id": id,
     "brand": brand,
-    "version": version,
+    "systemVersion": systemVersion,
+    "appName": appName,
+    "appVersion": appVersion,
   };
 }

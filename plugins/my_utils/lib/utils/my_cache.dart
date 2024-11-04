@@ -6,27 +6,33 @@ import 'dart:typed_data';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class MyCache {
-  // static final MyCache _instance = MyCache._privateConstructor();
-  // MyCache._privateConstructor();
-  // static MyCache get to => _instance;
-
-  final String cacheManagerKey;
-  final Duration timeCache;
-
+  static final MyCache _instance = MyCache._internal();
+  factory MyCache() => _instance;
   late BaseCacheManager cacheManager;
 
-  MyCache({
-    required this.cacheManagerKey,
-    required this.timeCache,
-  }) {
-    cacheManager = CacheManager(Config(cacheManagerKey,
-      stalePeriod: timeCache,
+  static const Duration _timeCache = Duration(days: 1);
+
+  MyCache._internal() {
+    final String cacheManagerKey = 'my_cache_manager_key';
+    cacheManager = CacheManager(Config(
+      cacheManagerKey,
+      stalePeriod: _timeCache,
+      // maxNrOfCacheObjects: 20,
+      // repo: JsonCacheInfoRepository(databaseName: cacheManagerKey),
+      // fileSystem: IOFileSystem(cacheManagerKey),
+      // fileService: HttpFileService(),
     ));
   }
 
   Future<File?> getSingleFile(String url) async {
-    final file = await cacheManager.getSingleFile(url);
-    return file;
+    try {
+      final file = await cacheManager.getSingleFile(url);
+      log('获取缓存文件成功 -> ${file.path}');
+      return file;
+    } catch (e) {
+      log('获取单个文件时出错 -> $e');
+      return null;
+    }
   }
 
   Future<File?> getFile(String url) async {
@@ -34,13 +40,47 @@ class MyCache {
     if (fileInfo == null) {
       log('没有找到缓存文件 -> $url');
     } else {
-      log('已找到缓存文件 -> ${fileInfo.file.path}');
+      final validTill = fileInfo.validTill;
+      final isBefore = validTill.isBefore(DateTime.now());
+      log('缓存过期时间: $validTill  -> 是否过期: $isBefore');
+      if (isBefore) {
+        await cacheManager.removeFile(url);
+        return null;
+      }
     }
     return fileInfo?.file;
   }
 
-  Future<void> putFile(String url, String json) async {
-    Uint8List uint8list = Uint8List.fromList(utf8.encode(json));
-    await cacheManager.putFile(url, uint8list);
+  Future<void> putFile(String key, String data, {
+    Duration maxAge = _timeCache,
+  }) async {
+    try {
+      Uint8List uint8list = Uint8List.fromList(utf8.encode(data));
+      await cacheManager.putFile(key, uint8list,
+        key: key,
+        maxAge: maxAge,
+      );
+      log('成功缓存文件 -> $key');
+    } catch (e) {
+      log('缓存文件时出错 -> $e');
+    }
+  }
+
+  Future<void> removeFile(String url) async {
+    try {
+      await cacheManager.removeFile(url);
+      log('成功删除缓存文件 -> $url');
+    } catch (e) {
+      log('删除缓存文件时出错 -> $e');
+    }
+  }
+
+  Future<void> clear() async {
+    try {
+      await cacheManager.emptyCache();
+      log('缓存已清空');
+    } catch (e) {
+      log('清空缓存时出错 -> $e');
+    }
   }
 }
