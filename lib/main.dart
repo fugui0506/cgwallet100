@@ -191,7 +191,7 @@ class _MyHomePageState extends State<MyHomePage> {
             }, child: const Text('清理所有缓存')),
 
             FilledButton(onPressed: () async {
-              await cache.getSingleFile('https://bce.bdstatic.com/p3m/common-service/uploads/dibu_edc2214.png');
+              await cache.getSingleFile('https://watermark.lovepik.com/photo/20211119/large/lovepik-ten-thousand-mountains-tupian-picture_500348227.jpg');
             }, child: const Text('获取网络缓存')),
           ],
         ),

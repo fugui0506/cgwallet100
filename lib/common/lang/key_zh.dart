@@ -126,7 +126,7 @@ const Map<String, String> zh = {
   Lang.chatViewTitle: '在线客服',
   Lang.chatViewNotifyTitle: '系统公告',
   Lang.chatViewNotifyContent: '为感谢大家对平台的支持与陪伴，平台新上线',
-  Lang.chatViewNotifyPersonalTitle: '个人公告',
+  Lang.chatViewNotifyPersonalTitle: '个人通知',
   Lang.chatViewNotifyPersonalContent: '为感谢大家对平台的支持与陪伴，平台新上线',
   Lang.chatViewCustomerTitle: '在线客服',
   Lang.chatViewCustomerContent: '提供各类问题疑难排解',
