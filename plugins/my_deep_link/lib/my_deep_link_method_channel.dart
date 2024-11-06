@@ -14,4 +14,17 @@ class MethodChannelMyDeepLink extends MyDeepLinkPlatform {
     final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
+
+  @override
+  Future<void> getDeepLink({void Function(String)? onSuccess}) async {
+    methodChannel.setMethodCallHandler((call) async {
+      switch (call.method) {
+        case 'sendDeepLink':
+          final msg = call.arguments.toString();
+          onSuccess?.call(msg);
+          break;
+        default:
+      }
+    });
+  }
 }

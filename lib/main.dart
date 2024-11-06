@@ -2,14 +2,18 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cgwallet100/common/common.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:my_deep_link/my_deep_link.dart';
 import 'package:my_device_info/my_device_info.dart';
 import 'package:my_utils/utils/my_cache.dart';
 import 'package:my_utils/utils/my_environment.dart';
 import 'package:my_utils/utils/my_string.dart';
 import 'package:my_utils/utils/my_uint8.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const MyApp());
 }
 
@@ -45,6 +49,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    MyDeepLink.getDeepLink(
+      onSuccess: (value) async {
+        log('Deep link success: $value');
+        showDialog(context: context, builder: (context) {
+          return AlertDialog(
+            title: Text('Deep Link'),
+            content: Text('Deep link success: $value'),
+          );
+        });
+      },
+    );
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -193,6 +208,19 @@ class _MyHomePageState extends State<MyHomePage> {
             FilledButton(onPressed: () async {
               await cache.getSingleFile('https://watermark.lovepik.com/photo/20211119/large/lovepik-ten-thousand-mountains-tupian-picture_500348227.jpg');
             }, child: const Text('获取网络缓存')),
+
+            FilledButton(
+              onPressed: () async {
+                showCupertinoDialog(context: context,
+                  barrierDismissible: true,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Deep Link'),
+                      content: Text('Deep link test'),
+                    );
+                });
+              }, child: const Text('弹窗测试')
+            ),
           ],
         ),
       ),// This trailing comma makes auto-formatting nicer for build methods.

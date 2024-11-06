@@ -6,6 +6,7 @@ import FlutterMacOS
 import Foundation
 
 import device_info_plus
+import my_deep_link
 import my_device_info
 import my_utils
 import package_info_plus
@@ -14,6 +15,7 @@ import sqflite_darwin
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   DeviceInfoPlusMacosPlugin.register(with: registry.registrar(forPlugin: "DeviceInfoPlusMacosPlugin"))
+  MyDeepLinkPlugin.register(with: registry.registrar(forPlugin: "MyDeepLinkPlugin"))
   MyDeviceInfoPlugin.register(with: registry.registrar(forPlugin: "MyDeviceInfoPlugin"))
   MyUtilsPlugin.register(with: registry.registrar(forPlugin: "MyUtilsPlugin"))
   FPPPackageInfoPlusPlugin.register(with: registry.registrar(forPlugin: "FPPPackageInfoPlusPlugin"))

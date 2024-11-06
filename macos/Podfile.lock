@@ -2,6 +2,8 @@ PODS:
   - device_info_plus (0.0.1):
     - FlutterMacOS
   - FlutterMacOS (1.0.0)
+  - my_deep_link (0.0.1):
+    - FlutterMacOS
   - my_device_info (0.0.1):
     - FlutterMacOS
   - my_utils (0.0.1):
@@ -18,6 +20,7 @@ PODS:
 DEPENDENCIES:
   - device_info_plus (from `Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
+  - my_deep_link (from `Flutter/ephemeral/.symlinks/plugins/my_deep_link/macos`)
   - my_device_info (from `Flutter/ephemeral/.symlinks/plugins/my_device_info/macos`)
   - my_utils (from `Flutter/ephemeral/.symlinks/plugins/my_utils/macos`)
   - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
@@ -29,6 +32,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
+  my_deep_link:
+    :path: Flutter/ephemeral/.symlinks/plugins/my_deep_link/macos
   my_device_info:
     :path: Flutter/ephemeral/.symlinks/plugins/my_device_info/macos
   my_utils:
@@ -43,6 +48,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   device_info_plus: 74e614483d05c89290d30a4c8feae15d555f7427
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
+  my_deep_link: 116076ea76fe94af3b2756a71eebf6fe8ed101d0
   my_device_info: 6fd48827ca15edd61f209c2482c111fcf908c2d2
   my_utils: 6b6065f6eaf9e4dd5d674d5ddf803fe7f7e55c3c
   package_info_plus: f5790acc797bf17c3e959e9d6cf162cc68ff7523

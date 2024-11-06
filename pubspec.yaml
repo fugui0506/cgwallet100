@@ -28,6 +28,10 @@ dependencies:
   my_utils:
     path: ./plugins/my_utils
 
+  # 深度链接
+  my_deep_link:
+      path: ./plugins/my_deep_link
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

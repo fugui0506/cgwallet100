@@ -26,4 +26,8 @@ abstract class MyDeepLinkPlatform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  Future<void> getDeepLink({void Function(String)? onSuccess}) {
+    throw UnimplementedError('getDeepLink() has not been implemented.');
+  }
 }

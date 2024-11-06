@@ -58,10 +58,10 @@ public class MyDeviceInfoPlugin: NSObject, FlutterPlugin {
         }
 
         defer {
-            IOObjectRelease(service) // 释放服务对象
+            IOObjectRelease(service)
         }
 
-        let kIOPlatformSerialNumber: NSString = "IOPlatformSerialNumber" // 定义序列号常量
+        let kIOPlatformSerialNumber: NSString = "IOPlatformSerialNumber"
 
         if let serialNumberAsCFString = IORegistryEntryCreateCFProperty(service, kIOPlatformSerialNumber, kCFAllocatorDefault, 0)?.takeRetainedValue() as? String {
             return serialNumberAsCFString
