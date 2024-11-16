@@ -8,21 +8,16 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 class MyCache {
   static final MyCache _instance = MyCache._internal();
   factory MyCache() => _instance;
-  late BaseCacheManager cacheManager;
-
-  static const Duration _timeCache = Duration(days: 1);
-
   MyCache._internal() {
     final String cacheManagerKey = 'my_cache_manager_key';
     cacheManager = CacheManager(Config(
       cacheManagerKey,
       stalePeriod: _timeCache,
-      // maxNrOfCacheObjects: 20,
-      // repo: JsonCacheInfoRepository(databaseName: cacheManagerKey),
-      // fileSystem: IOFileSystem(cacheManagerKey),
-      // fileService: HttpFileService(),
     ));
   }
+
+  late BaseCacheManager cacheManager;
+  static const Duration _timeCache = Duration(days: 1);
 
   Future<File?> getSingleFile(String url) async {
     try {

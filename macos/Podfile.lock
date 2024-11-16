@@ -6,6 +6,8 @@ PODS:
     - FlutterMacOS
   - my_device_info (0.0.1):
     - FlutterMacOS
+  - my_gallery (0.0.1):
+    - FlutterMacOS
   - my_utils (0.0.1):
     - FlutterMacOS
   - package_info_plus (0.0.1):
@@ -22,6 +24,7 @@ DEPENDENCIES:
   - FlutterMacOS (from `Flutter/ephemeral`)
   - my_deep_link (from `Flutter/ephemeral/.symlinks/plugins/my_deep_link/macos`)
   - my_device_info (from `Flutter/ephemeral/.symlinks/plugins/my_device_info/macos`)
+  - my_gallery (from `Flutter/ephemeral/.symlinks/plugins/my_gallery/macos`)
   - my_utils (from `Flutter/ephemeral/.symlinks/plugins/my_utils/macos`)
   - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
@@ -36,6 +39,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/my_deep_link/macos
   my_device_info:
     :path: Flutter/ephemeral/.symlinks/plugins/my_device_info/macos
+  my_gallery:
+    :path: Flutter/ephemeral/.symlinks/plugins/my_gallery/macos
   my_utils:
     :path: Flutter/ephemeral/.symlinks/plugins/my_utils/macos
   package_info_plus:
@@ -46,15 +51,16 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/sqflite_darwin/darwin
 
 SPEC CHECKSUMS:
-  device_info_plus: 74e614483d05c89290d30a4c8feae15d555f7427
+  device_info_plus: 1b14eed9bf95428983aed283a8d51cce3d8c4215
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   my_deep_link: 116076ea76fe94af3b2756a71eebf6fe8ed101d0
   my_device_info: 6fd48827ca15edd61f209c2482c111fcf908c2d2
+  my_gallery: 17849fe5726e5becc42718ef1f3881c395bef251
   my_utils: 6b6065f6eaf9e4dd5d674d5ddf803fe7f7e55c3c
-  package_info_plus: f5790acc797bf17c3e959e9d6cf162cc68ff7523
+  package_info_plus: 12f1c5c2cfe8727ca46cbd0b26677728972d9a5b
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   sqflite_darwin: a553b1fd6fe66f53bbb0fe5b4f5bab93f08d7a13
 
 PODFILE CHECKSUM: 236401fc2c932af29a9fcf0e97baeeb2d750d367
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

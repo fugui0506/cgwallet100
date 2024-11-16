@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_deep_link/my_deep_link.dart';
 import 'package:my_device_info/my_device_info.dart';
+import 'package:my_gallery/my_gallery_method.dart';
 import 'package:my_utils/utils/my_cache.dart';
 import 'package:my_utils/utils/my_environment.dart';
 import 'package:my_utils/utils/my_string.dart';
@@ -112,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
             FilledButton(
               onPressed: ()  async {
                 final keywords = ['test', 'pre', 'prod','rel', 'grey'];
-                log('$keywords 转二进制 -> ${MyUint8.encode(keywords)}');
+                log('$keywords 转二进制 -> ${MyUint8.instance.encode(keywords)}');
               },
               child: const Text('转二进制'),
             ),
@@ -120,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
             FilledButton(
               onPressed: ()  async {
                 final keywords = [31, 139, 8, 0, 0, 0, 0, 0, 0, 3, 139, 86, 42, 73, 45, 46, 81, 210, 81, 42, 40, 74, 5, 147, 249, 41, 74, 58, 74, 69, 169, 57, 74, 58, 74, 233, 69, 169, 149, 74, 177, 0, 150, 139, 177, 227, 34, 0, 0, 0];
-                log('$keywords 二进制转字符串 -> ${MyUint8.decode(keywords)}');
+                log('$keywords 二进制转字符串 -> ${MyUint8.instance.decode(keywords)}');
               },
               child: const Text('二进制转字符串'),
             ),
@@ -220,6 +221,32 @@ class _MyHomePageState extends State<MyHomePage> {
                     );
                 });
               }, child: const Text('弹窗测试')
+            ),
+
+            FilledButton(
+                onPressed: () async {
+                  log("正在获取图片");
+                  final imageFile = await cache.getSingleFile('https://user-images.githubusercontent.com/13992911/82857992-2c1ed780-9f45-11ea-9e61-56263a4b9992.png');
+                  if (imageFile != null) {
+                    final result = await MyGallery.decodeQRCode(path: imageFile.path);
+                    log("result: $result");
+                  } else {
+                    log("获取图片失败");
+                  }
+                }, child: const Text('测试二维码识别')
+            ),
+
+            FilledButton(
+                onPressed: () async {
+                  log("正在下载图片...");
+                  final imageFile = await cache.getSingleFile('https://user-images.githubusercontent.com/13992911/82857992-2c1ed780-9f45-11ea-9e61-56263a4b9992.png');
+                  if (imageFile != null) {
+                    final result = await MyGallery.saveImage(path: imageFile.path);
+                    log("result: $result");
+                  } else {
+                    log("保存图片");
+                  }
+                }, child: const Text('保存图片')
             ),
           ],
         ),

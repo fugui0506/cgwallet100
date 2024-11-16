@@ -6,7 +6,6 @@
 import 'my_deep_link_platform_interface.dart';
 
 class MyDeepLink {
-
   static Future<void> getDeepLink({
     void Function(String)? onSuccess,
   }) async {

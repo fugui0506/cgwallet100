@@ -4,10 +4,8 @@ import 'package:dio/dio.dart';
 
 
 class MyEnvironment {
-  static final MyEnvironment _instance = MyEnvironment._privateConstructor();
-
-  MyEnvironment._privateConstructor();
-
+  static final MyEnvironment _instance = MyEnvironment._internal();
+  MyEnvironment._internal();
   static MyEnvironment get instance => _instance;
 
   Future<Environment> initialize() async {

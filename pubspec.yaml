@@ -32,6 +32,10 @@ dependencies:
   my_deep_link:
       path: ./plugins/my_deep_link
 
+  # 图片处理
+  my_gallery:
+    path: ./plugins/my_gallery
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

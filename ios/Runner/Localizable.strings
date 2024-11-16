@@ -1,0 +1,14 @@
+// 英文版（en.lproj/Localizable.strings）
+"NSPhotoLibraryAddUsageDescription" = "We need your permission to save images to the photo library.";
+"NSCameraUsageDescription" = "We need your permission to use the camera.";
+"NSPhotoLibraryUsageDescription" = "We need your permission to access the photo library.";
+"NSMicrophoneUsageDescription" = "We need your permission to use audio recording.";
+
+// 简体中文版（zh-Hans.lproj/Localizable.strings）
+"NSPhotoLibraryAddUsageDescription" = "我们需要您的同意才能保存图片到相册";
+"NSCameraUsageDescription" = "我们需要您的同意才能使用摄像头";
+"NSPhotoLibraryUsageDescription" = "我们需要您的同意才能访问相册";
+"NSMicrophoneUsageDescription" = "我们需要您的同意才能使用音频录制";
+
+
+
