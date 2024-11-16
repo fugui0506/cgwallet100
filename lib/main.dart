@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:cgwallet100/common/common.dart';
+import 'package:cgwallet/common/common.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_deep_link/my_deep_link.dart';
