@@ -2,11 +2,17 @@ import 'package:permission_handler/permission_handler.dart';
 
 class MyPermission {
   static final MyPermission _instance = MyPermission._internal();
+  factory MyPermission() => _instance;
   MyPermission._internal();
-  static MyPermission get instance => _instance;
+
+
+  static Future<bool> storage() => _instance._storage();
+  static Future<bool> camera() => _instance._camera();
+  static Future<bool> photos() => _instance._photos();
+
 
   /// 请求外部储存的读取和写入权限
-  Future<bool> storage() async {
+  Future<bool> _storage() async {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
       var result = await Permission.storage.request();
@@ -16,7 +22,7 @@ class MyPermission {
   }
 
   /// 请求外部储存的读取和写入权限
-  Future<bool> camera() async {
+  Future<bool> _camera() async {
     var status = await Permission.camera.status;
     if (!status.isGranted) {
       var result = await Permission.camera.request();
@@ -26,7 +32,7 @@ class MyPermission {
   }
 
   /// 请求相册权限
-  Future<bool> photos() async {
+  Future<bool> _photos() async {
     var status = await Permission.photos.status;
     if (!status.isGranted) {
       var result = await Permission.photos.request();

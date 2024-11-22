@@ -5,10 +5,13 @@ import 'package:dio/dio.dart';
 
 class MyEnvironment {
   static final MyEnvironment _instance = MyEnvironment._internal();
+  factory MyEnvironment() => _instance;
   MyEnvironment._internal();
-  static MyEnvironment get instance => _instance;
 
-  Future<Environment> initialize() async {
+  static Future<Environment> initialize() => _instance._initialize();
+  static Future<String> getConfig(List<String> urls) => _instance._getConfig(urls);
+
+  Future<Environment> _initialize() async {
     const String environment = String.fromEnvironment('ENVIRONMENT', defaultValue: 'test');
 
     switch (environment) {
@@ -25,7 +28,7 @@ class MyEnvironment {
     }
   }
 
-  Future<String> getConfig(List<String> urls) async {
+  Future<String> _getConfig(List<String> urls) async {
     final Duration timeout = Duration(seconds: 10);
     final Dio dio = Dio();
     String result = '';

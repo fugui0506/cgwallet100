@@ -6,11 +6,15 @@ import 'package:archive/archive.dart';
 
 class MyUint8 {
   static final MyUint8 _instance = MyUint8._internal();
+  factory MyUint8() => _instance;
   MyUint8._internal();
-  static MyUint8 get instance => _instance;
+
+
+  static Uint8List encode(dynamic data) => _instance._encode(data);
+  static String decode(dynamic data) => _instance._decode(data);
 
   /// 字符串转二进制数组
-  Uint8List encode(dynamic data) {
+  Uint8List _encode(dynamic data) {
     String jsonString;
 
     // 根据输入类型转换为 JSON 字符串
@@ -35,7 +39,7 @@ class MyUint8 {
   }
 
   /// 二进制数组转字符串
-  String decode(dynamic data) {
+  String _decode(dynamic data) {
     try {
       final bytes = List<int>.from(data);
       List<int> decompressedData = GZipDecoder().decodeBytes(bytes);

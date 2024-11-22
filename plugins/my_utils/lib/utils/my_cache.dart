@@ -9,20 +9,26 @@ class MyCache {
   static final MyCache _instance = MyCache._internal();
   factory MyCache() => _instance;
   MyCache._internal() {
-    final String cacheManagerKey = 'my_cache_manager_key';
+    const String cacheManagerKey = 'my_cache_manager_key';
     cacheManager = CacheManager(Config(
       cacheManagerKey,
       stalePeriod: _timeCache,
     ));
   }
 
+  static Future<File?> getSingleFile(String url) => _instance._getSingleFile(url);
+  static Future<File?> getFile(String url) => _instance._getFile(url);
+  static Future<void> putFile(String key, String data, {Duration maxAge = _timeCache}) => _instance._putFile(key, data, maxAge: maxAge);
+  static Future<void> removeFile(String url) => _instance._removeFile(url);
+  static Future<void> clear() => _instance._clear();
+
   late BaseCacheManager cacheManager;
   static const Duration _timeCache = Duration(days: 1);
 
-  Future<File?> getSingleFile(String url) async {
+  Future<File?> _getSingleFile(String url) async {
     try {
       final file = await cacheManager.getSingleFile(url);
-      log('获取缓存文件成功 -> ${file.path}');
+      log('获取缓存文件成功$url -> ${file.path}');
       return file;
     } catch (e) {
       log('获取单个文件时出错 -> $e');
@@ -30,7 +36,7 @@ class MyCache {
     }
   }
 
-  Future<File?> getFile(String url) async {
+  Future<File?> _getFile(String url) async {
     final fileInfo = await cacheManager.getFileFromCache(url);
     if (fileInfo == null) {
       log('没有找到缓存文件 -> $url');
@@ -46,7 +52,7 @@ class MyCache {
     return fileInfo?.file;
   }
 
-  Future<void> putFile(String key, String data, {
+  Future<void> _putFile(String key, String data, {
     Duration maxAge = _timeCache,
   }) async {
     try {
@@ -61,7 +67,7 @@ class MyCache {
     }
   }
 
-  Future<void> removeFile(String url) async {
+  Future<void> _removeFile(String url) async {
     try {
       await cacheManager.removeFile(url);
       log('成功删除缓存文件 -> $url');
@@ -70,7 +76,7 @@ class MyCache {
     }
   }
 
-  Future<void> clear() async {
+  Future<void> _clear() async {
     try {
       await cacheManager.emptyCache();
       log('缓存已清空');

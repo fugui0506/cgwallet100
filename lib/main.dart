@@ -1,16 +1,13 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:cgwallet/common/common.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:my_deep_link/my_deep_link.dart';
 import 'package:my_device_info/my_device_info.dart';
-import 'package:my_gallery/my_gallery_method.dart';
-import 'package:my_utils/utils/my_cache.dart';
-import 'package:my_utils/utils/my_environment.dart';
-import 'package:my_utils/utils/my_string.dart';
-import 'package:my_utils/utils/my_uint8.dart';
+import 'package:my_gallery/my_gallery.dart';
+import 'package:my_utils/my_utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,13 +43,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<String> wssUrls = [];
   List<String> baseUrls = [];
-  final cache = MyCache();
 
   @override
   Widget build(BuildContext context) {
+    MyDio? myDio;
     MyDeepLink.getDeepLink(
       onSuccess: (value) async {
-        log('Deep link success: $value');
+        MyLogger.w('Deep link success: $value');
         showDialog(context: context, builder: (context) {
           return AlertDialog(
             title: Text('Deep Link'),
@@ -76,36 +73,35 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: ()  async {
                 final info = await MyDeviceInfo.getDeviceInfo();
 
-                log('设备配置信息 --> ${info.toJson()}');
+                MyLogger.w('设备配置信息 --> ${info.toJson()}');
               },
               child: const Text('获取设备信息'),
             ),
             FilledButton(
                 onPressed: ()  async {
-                  final environment = MyEnvironment.instance;
-                  final env = await environment.initialize();
+                  final env = await MyEnvironment.initialize();
 
                   String info = '';
                   switch(env) {
                     case Environment.test:
-                      info = await environment.getConfig(MyConfig.urls.testUrls);
+                      info = await MyEnvironment.getConfig(MyConfig.urls.testUrls);
                       break;
                     case Environment.pre:
 
-                      info = await environment.getConfig(MyConfig.urls.preUrls);
+                      info = await MyEnvironment.getConfig(MyConfig.urls.preUrls);
                       break;
                     case Environment.rel:
 
-                      info = await environment.getConfig(MyConfig.urls.relUrls);
+                      info = await MyEnvironment.getConfig(MyConfig.urls.relUrls);
                       break;
                     case Environment.grey:
-                      info = await environment.getConfig(MyConfig.urls.greyUrls);
+                      info = await MyEnvironment.getConfig(MyConfig.urls.greyUrls);
                       break;
                     default:
-                      info = await environment.getConfig(MyConfig.urls.testUrls);
+                      info = await MyEnvironment.getConfig(MyConfig.urls.testUrls);
                   }
                   info = info.aesDecrypt(MyConfig.key.aesKey);
-                  log('解密后的配置信息 --> $info');
+                  MyLogger.w('解密后的配置信息 --> $info');
                 },
                 child: const Text('获取环境变量'),
             ),
@@ -113,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
             FilledButton(
               onPressed: ()  async {
                 final keywords = ['test', 'pre', 'prod','rel', 'grey'];
-                log('$keywords 转二进制 -> ${MyUint8.instance.encode(keywords)}');
+                MyLogger.w('$keywords 转二进制 -> ${MyUint8.encode(keywords)}');
               },
               child: const Text('转二进制'),
             ),
@@ -121,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
             FilledButton(
               onPressed: ()  async {
                 final keywords = [31, 139, 8, 0, 0, 0, 0, 0, 0, 3, 139, 86, 42, 73, 45, 46, 81, 210, 81, 42, 40, 74, 5, 147, 249, 41, 74, 58, 74, 69, 169, 57, 74, 58, 74, 233, 69, 169, 149, 74, 177, 0, 150, 139, 177, 227, 34, 0, 0, 0];
-                log('$keywords 二进制转字符串 -> ${MyUint8.instance.decode(keywords)}');
+                MyLogger.w('$keywords 二进制转字符串 -> ${MyUint8.decode(keywords)}');
               },
               child: const Text('二进制转字符串'),
             ),
@@ -129,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
             FilledButton(
               onPressed: ()  async {
                 final keywords = '这个密码无法加密';
-                log(keywords.aesEncrypt(MyConfig.key.aesKey));
+                MyLogger.w(keywords.aesEncrypt(MyConfig.key.aesKey));
               },
               child: const Text('加密'),
             ),
@@ -137,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
             FilledButton(
               onPressed: ()  async {
                 final keywords = 'vHfMg1H8v6wmE2jXyR26wsCDedAQwX4Cnhaivj8px88=';
-                log('解密 -> ${keywords.aesDecrypt(MyConfig.key.aesKey)}');
+                MyLogger.w('解密 -> ${keywords.aesDecrypt(MyConfig.key.aesKey)}');
               },
               child: const Text('解密'),
             ),
@@ -145,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
             FilledButton(
               onPressed: ()  async {
                 final keywords = '1';
-                log('解密 -> ${keywords.fixed(4)}');
+                MyLogger.w('解密 -> ${keywords.fixed(4)}');
               },
               child: const Text('保留小数点'),
             ),
@@ -153,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
             FilledButton(
               onPressed: ()  async {
                 final keywords = '收到1发发';
-                log('解密 -> ${keywords.isChineseName()}');
+                MyLogger.w('解密 -> ${keywords.isChineseName()}');
               },
               child: const Text('检验是否中文名字'),
             ),
@@ -161,7 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
             FilledButton(
               onPressed: ()  async {
                 final keywords = '收到1发发';
-                log('解密 -> ${keywords.hideMiddle(1, 1)}');
+                MyLogger.w('解密 -> ${keywords.hideMiddle(1, 1)}');
               },
               child: const Text('隐藏中间数字'),
             ),
@@ -169,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
             FilledButton(
               onPressed: ()  async {
                 final keywords = '{"name":"tom","age":18,"gender":"male","hobbies":["reading","swimming"]}';
-                log('解密 -> ${keywords.format()}');
+                MyLogger.w('格式化输出 -> ${keywords.format()}');
               },
               child: const Text('格式化JSON输出'),
             ),
@@ -177,37 +173,37 @@ class _MyHomePageState extends State<MyHomePage> {
             FilledButton(
               onPressed: ()  async {
                 final keywords = '1212';
-                log('解密 -> ${keywords.toJson()}');
+                MyLogger.w('$keywords -> ${keywords.toJson()}');
               },
-              child: const Text('格式化JSON输出'),
+              child: const Text('转 json 格式'),
             ),
 
             FilledButton(
               onPressed: ()  async {
-                await cache.putFile('cache_shared_test', '1123123', maxAge: Duration(seconds: 30));
+                await MyCache.putFile('cache_shared_test', '1123123', maxAge: Duration(seconds: 30));
               },
               child: const Text('缓存自定义数据'),
             ),
 
             FilledButton(onPressed: () async {
-              final result = await cache.getFile('cache_shared_test');
+              final result = await MyCache.getFile('cache_shared_test');
 
               if (result == null) {
-                log('获取缓存数据 -> null');
+                MyLogger.w('获取缓存数据 -> null');
                 return;
               }
 
               final data = await result.readAsBytes();
               final string = utf8.decode(data);
-              log('获取缓存数据 -> $string');
+              MyLogger.w('获取缓存数据 -> $string');
             }, child: const Text('获取缓存数据')),
 
             FilledButton(onPressed: () async {
-              await cache.clear();
+              await MyCache.clear();
             }, child: const Text('清理所有缓存')),
 
             FilledButton(onPressed: () async {
-              await cache.getSingleFile('https://watermark.lovepik.com/photo/20211119/large/lovepik-ten-thousand-mountains-tupian-picture_500348227.jpg');
+              await MyCache.getSingleFile('https://watermark.lovepik.com/photo/20211119/large/lovepik-ten-thousand-mountains-tupian-picture_500348227.jpg');
             }, child: const Text('获取网络缓存')),
 
             FilledButton(
@@ -225,28 +221,117 @@ class _MyHomePageState extends State<MyHomePage> {
 
             FilledButton(
                 onPressed: () async {
-                  log("正在获取图片");
-                  final imageFile = await cache.getSingleFile('https://user-images.githubusercontent.com/13992911/82857992-2c1ed780-9f45-11ea-9e61-56263a4b9992.png');
+                  MyLogger.w("正在获取图片");
+                  final imageFile = await MyCache.getSingleFile('https://user-images.githubusercontent.com/13992911/82857992-2c1ed780-9f45-11ea-9e61-56263a4b9992.png');
                   if (imageFile != null) {
                     final result = await MyGallery.decodeQRCode(path: imageFile.path);
-                    log("result: $result");
+                    MyLogger.w("result: $result");
                   } else {
-                    log("获取图片失败");
+                    MyLogger.w("获取图片失败");
                   }
                 }, child: const Text('测试二维码识别')
             ),
 
             FilledButton(
                 onPressed: () async {
-                  log("正在下载图片...");
-                  final imageFile = await cache.getSingleFile('https://user-images.githubusercontent.com/13992911/82857992-2c1ed780-9f45-11ea-9e61-56263a4b9992.png');
+                  MyLogger.w("正在下载图片...");
+                  final imageFile = await MyCache.getSingleFile('https://user-images.githubusercontent.com/13992911/82857992-2c1ed780-9f45-11ea-9e61-56263a4b9992.png');
                   if (imageFile != null) {
                     final result = await MyGallery.saveImage(path: imageFile.path);
-                    log("result: $result");
+                    MyLogger.w("result: $result");
                   } else {
-                    log("保存图片");
+                    MyLogger.w("保存图片");
                   }
                 }, child: const Text('保存图片')
+            ),
+
+            FilledButton(
+                onPressed: () async {
+                  final imageFile = await MyPicker.getImage();
+                  if (imageFile!= null) {
+                    final result = await MyGallery.decodeQRCode(path: imageFile.path);
+                    MyLogger.w("result: $result");
+                  }
+                }, child: const Text('二维码识别')
+            ),
+
+            FilledButton(
+                onPressed: () async {
+                  final imageFile = await MyPicker.getImage(isCamera: true);
+                  if (imageFile!= null) {
+                    final result = await MyGallery.decodeQRCode(path: imageFile.path);
+                    MyLogger.w("result: $result");
+                  }
+                }, child: const Text('拍照识别')
+            ),
+
+
+            FilledButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyGallery.scan(onResult: (result) {
+                      Navigator.pop(context);
+                      MyLogger.w('result: $result');
+                      showDialog(context: context, builder: (context) {
+                        return Dialog(child: Text("result -> $result"));
+                      });
+                    })),
+                  );
+                }, child: const Text('扫码')
+            ),
+
+            FilledButton(
+                onPressed: () async {
+                  myDio = MyDio.initialize(
+                    baseOptions: (baseOptions) {
+                      return baseOptions.copyWith(
+                        baseUrl: 'https://wltadmin.z13a70.com',
+                        connectTimeout: Duration(seconds: 30),
+                        receiveTimeout: Duration(seconds: 60),
+                        contentType: 'application/json; charset=utf-8',
+                        // responseType: ResponseType.json,
+                      );
+                    }
+                  );
+                }, child: const Text('初始化dio')
+            ),
+
+            FilledButton(
+                onPressed: () async {
+                  myDio?.dio.options.baseUrl = 'https://www.baidu.com';
+                }, child: const Text('配置 base_options')
+            ),
+
+            FilledButton(
+                onPressed: () async {
+                  myDio?.dio.options.baseUrl = 'https://www.google.com';
+                }, child: const Text('更改 base_options')
+            ),
+
+            FilledButton(
+                onPressed: () async {
+                  myDio?.dio.options.headers = {
+                    'x-token': 'your_token',
+                  };
+                }, child: const Text('配置 x-token')
+            ),
+
+            FilledButton(
+                onPressed: () async {
+                  myDio?.dio.options.headers = {};
+                }, child: const Text('删除 x-token')
+            ),
+
+            FilledButton(
+                onPressed: () async {
+                  await myDio?.post(
+                    path: '/admin/base/captcha',
+                    onSuccess: (response) {
+                      print(response);
+                    }
+                  );
+                }, child: const Text('请求')
             ),
           ],
         ),
