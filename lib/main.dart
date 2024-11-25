@@ -343,47 +343,35 @@ class _MyHomePageState extends State<MyHomePage> {
                   }
                   final token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVVUlEIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiSUQiOjE4MCwiVXNlcm5hbWUiOiJmdWd1aTAwNiIsIlBob25lIjoiMTU4MDUwNjAwMDYiLCJBdXRob3JpdHlJZCI6MCwiQWNjb3VudFR5cGUiOjEsIklzQXV0aCI6MywiQnVmZmVyVGltZSI6ODY0MDAsImlzcyI6InFtUGx1cyIsImF1ZCI6WyJHVkEiXSwiZXhwIjoxNzMyODg5NjUyLCJuYmYiOjE3MzIyODQ4NTJ9.U8xIeS4z4P4TsgHhBLiQeeRNJWB9C11xBTK7d1bRzuU";
                   final wssUrls = [
-                    'wss://wltws2.z13a70.com',
-                    'wss://wltws.z13a70.com',
                     'wss://wltws3.z13a70.com',
                     'wss://wltws4.z13a70.com',
+                    'wss://wltws2.z13a70.com',
+                    'wss://wltws.z13a70.com',
                   ];
 
-                  await Future.any(wssUrls.map((e) async {
-                    MyWss? myWssTemp = MyWss(
-                      url: e,
-                      isCanConnect: () async {
-                        return token.isNotEmpty;
-                      },
-                      headers: {
-                        'X-token': token,
-                      },
-                      heartbeatMessage:MyUint8.encode({'type': 9}),
-                      onMessageReceived: (e) {
-                        print(MyUint8.decode(e));
-                      },
-                      onMaxRetryOut: () async {
-                        // await myWss?.connect();
-                      },
-                    );
-
-                    await myWssTemp.connect();
-
-                    if (myWss == null) {
-                      if (myWssTemp.isConnected) {
-                        myWss = myWssTemp;
-                      }
-                      await myWssTemp.close();
-                      myWssTemp = null;
-                    } else {
-                      await myWssTemp.close();
-                      myWssTemp = null;
-                    }
-
-                    print(myWssTemp);
-                  }));
-
-                  myWss?.connect();
+                  myWss = MyWss(
+                    urls: wssUrls,
+                    isCanConnect: () async {
+                      return token.isNotEmpty;
+                    },
+                    headers: {
+                      'X-token': token,
+                    },
+                    heartbeatMessage:MyUint8.encode({'type': 9}),
+                    onMessageReceived: (e) {
+                      print(MyUint8.decode(e));
+                    },
+                    onMaxRetryOut: () async {
+                      showCupertinoDialog(context: context,
+                        barrierDismissible: true,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text('所有连接都用完了'),
+                            content: Text('wss 连接岚不上'),
+                          );
+                        });
+                    },
+                  );
                 }, child: const Text('初始化 wss')
             ),
 
@@ -396,6 +384,12 @@ class _MyHomePageState extends State<MyHomePage> {
             FilledButton(
                 onPressed: () async {
                   await myWss?.connect();
+                }, child: const Text('连接 wss')
+            ),
+
+            FilledButton(
+                onPressed: () async {
+                  await myWss?.reset();
                 }, child: const Text('重置 wss')
             ),
           ],
