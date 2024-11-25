@@ -8,6 +8,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   my_device_info
   my_gallery
   my_utils
+  my_widgets
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

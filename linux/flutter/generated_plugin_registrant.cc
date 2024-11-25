@@ -11,6 +11,7 @@
 #include <my_device_info/my_device_info_plugin.h>
 #include <my_gallery/my_gallery_plugin.h>
 #include <my_utils/my_utils_plugin.h>
+#include <my_widgets/my_widgets_plugin.h>
 
 void fl_register_plugins(FlPluginRegistry* registry) {
   g_autoptr(FlPluginRegistrar) file_selector_linux_registrar =
@@ -28,4 +29,7 @@ void fl_register_plugins(FlPluginRegistry* registry) {
   g_autoptr(FlPluginRegistrar) my_utils_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "MyUtilsPlugin");
   my_utils_plugin_register_with_registrar(my_utils_registrar);
+  g_autoptr(FlPluginRegistrar) my_widgets_registrar =
+      fl_plugin_registry_get_registrar_for_plugin(registry, "MyWidgetsPlugin");
+  my_widgets_plugin_register_with_registrar(my_widgets_registrar);
 }

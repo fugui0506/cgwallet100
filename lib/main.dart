@@ -338,7 +338,7 @@ class _MyHomePageState extends State<MyHomePage> {
             FilledButton(
                 onPressed: () async {
                   if (myWss != null) {
-                    print('已经初始化...');
+                    MyLogger.w('已经初始化...');
                     return;
                   }
                   final token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVVUlEIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiSUQiOjE4MCwiVXNlcm5hbWUiOiJmdWd1aTAwNiIsIlBob25lIjoiMTU4MDUwNjAwMDYiLCJBdXRob3JpdHlJZCI6MCwiQWNjb3VudFR5cGUiOjEsIklzQXV0aCI6MywiQnVmZmVyVGltZSI6ODY0MDAsImlzcyI6InFtUGx1cyIsImF1ZCI6WyJHVkEiXSwiZXhwIjoxNzMyODg5NjUyLCJuYmYiOjE3MzIyODQ4NTJ9.U8xIeS4z4P4TsgHhBLiQeeRNJWB9C11xBTK7d1bRzuU";
@@ -359,7 +359,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                     heartbeatMessage:MyUint8.encode({'type': 9}),
                     onMessageReceived: (e) {
-                      print(MyUint8.decode(e));
+                      MyLogger.w(MyUint8.decode(e));
                     },
                     onMaxRetryOut: () async {
                       showCupertinoDialog(context: context,

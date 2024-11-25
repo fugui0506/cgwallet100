@@ -36,6 +36,10 @@ dependencies:
   my_gallery:
     path: ./plugins/my_gallery
 
+  # 常用组件
+  my_widgets:
+    path: ./plugins/my_widgets
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

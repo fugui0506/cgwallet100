@@ -449,6 +449,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  my_widgets:
+    dependency: "direct main"
+    description:
+      path: "plugins/my_widgets"
+      relative: true
+    source: path
+    version: "0.0.1"
   package_info_plus:
     dependency: transitive
     description:
