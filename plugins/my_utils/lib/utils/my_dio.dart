@@ -37,10 +37,12 @@ class MyDio {
         return handler.next(options);
       },
       onResponse: (response, handler) async {
+        _logSuccess(response);
         await onResponse?.call(response);
         return handler.next(response);
       },
       onError: (DioException err, handler) {
+        _logError(err);
         return handler.reject(err);
       },
     ));
@@ -105,10 +107,8 @@ class MyDio {
         cancelToken: cancelToken ?? cancelTokenPublic,
         onReceiveProgress: onReceiveProgress,
       );
-      _logSuccess(response);
       onSuccess?.call(response.data);
     } on DioException catch (err) {
-      _logError(err);
       onError?.call(err);
     }
   }
@@ -125,10 +125,8 @@ class MyDio {
         data: data,
         cancelToken: cancelToken ?? cancelTokenPublic,
       );
-      _logSuccess(response);
       onSuccess?.call(response.data);
     } on DioException catch (err) {
-      _logError(err);
       onError?.call(err);
     }
   }
@@ -148,10 +146,8 @@ class MyDio {
         options: Options(contentType: 'multipart/form-data'),
         onSendProgress: onSendProgress,
       );
-      _logSuccess(response);
       onSuccess?.call(response.data);
     } on DioException catch (err) {
-      _logError(err);
       onError?.call(err);
     }
   }

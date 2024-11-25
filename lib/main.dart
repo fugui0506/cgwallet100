@@ -47,6 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     MyDio? myDio;
+    MyWss? myWss;
+
     MyDeepLink.getDeepLink(
       onSuccess: (value) async {
         MyLogger.w('Deep link success: $value');
@@ -328,10 +330,73 @@ class _MyHomePageState extends State<MyHomePage> {
                   await myDio?.post(
                     path: '/admin/base/captcha',
                     onSuccess: (response) {
-                      print(response);
                     }
                   );
                 }, child: const Text('请求')
+            ),
+
+            FilledButton(
+                onPressed: () async {
+                  if (myWss != null) {
+                    print('已经初始化...');
+                    return;
+                  }
+                  final token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVVUlEIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiSUQiOjE4MCwiVXNlcm5hbWUiOiJmdWd1aTAwNiIsIlBob25lIjoiMTU4MDUwNjAwMDYiLCJBdXRob3JpdHlJZCI6MCwiQWNjb3VudFR5cGUiOjEsIklzQXV0aCI6MywiQnVmZmVyVGltZSI6ODY0MDAsImlzcyI6InFtUGx1cyIsImF1ZCI6WyJHVkEiXSwiZXhwIjoxNzMyODg5NjUyLCJuYmYiOjE3MzIyODQ4NTJ9.U8xIeS4z4P4TsgHhBLiQeeRNJWB9C11xBTK7d1bRzuU";
+                  final wssUrls = [
+                    'wss://wltws2.z13a70.com',
+                    'wss://wltws.z13a70.com',
+                    'wss://wltws3.z13a70.com',
+                    'wss://wltws4.z13a70.com',
+                  ];
+
+                  await Future.any(wssUrls.map((e) async {
+                    MyWss? myWssTemp = MyWss(
+                      url: e,
+                      isCanConnect: () async {
+                        return token.isNotEmpty;
+                      },
+                      headers: {
+                        'X-token': token,
+                      },
+                      heartbeatMessage:MyUint8.encode({'type': 9}),
+                      onMessageReceived: (e) {
+                        print(MyUint8.decode(e));
+                      },
+                      onMaxRetryOut: () async {
+                        // await myWss?.connect();
+                      },
+                    );
+
+                    await myWssTemp.connect();
+
+                    if (myWss == null) {
+                      if (myWssTemp.isConnected) {
+                        myWss = myWssTemp;
+                      }
+                      await myWssTemp.close();
+                      myWssTemp = null;
+                    } else {
+                      await myWssTemp.close();
+                      myWssTemp = null;
+                    }
+
+                    print(myWssTemp);
+                  }));
+
+                  myWss?.connect();
+                }, child: const Text('初始化 wss')
+            ),
+
+            FilledButton(
+                onPressed: () async {
+                  await myWss?.close();
+                }, child: const Text('断开 wss')
+            ),
+
+            FilledButton(
+                onPressed: () async {
+                  await myWss?.connect();
+                }, child: const Text('重置 wss')
             ),
           ],
         ),
