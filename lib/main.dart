@@ -8,6 +8,7 @@ import 'package:my_deep_link/my_deep_link.dart';
 import 'package:my_device_info/my_device_info.dart';
 import 'package:my_gallery/my_gallery.dart';
 import 'package:my_utils/my_utils.dart';
+import 'package:my_widgets/my_widgets.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      builder: (context, child) => MyAlert(key: MyAlert.globalKey, child: child),
     );
   }
 }
@@ -391,6 +393,40 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () async {
                   await myWss?.reset();
                 }, child: const Text('重置 wss')
+            ),
+
+            FilledButton(
+                onPressed: () async {
+                  MyAlert.showLoading();
+                  await Future.delayed(Duration(seconds: 3));
+                  MyAlert.hideLoading();
+                }, child: const Text('展示 loading')
+            ),
+
+            FilledButton(
+                onPressed: () async {
+                  MyAlert.showBlock();
+                  await Future.delayed(Duration(seconds: 3));
+                  MyAlert.hideBlock();
+                }, child: const Text('展示 block')
+            ),
+
+            FilledButton(
+                onPressed: () async {
+                  MyAlert.showSnack(
+                    child: Row(children: [
+                      CircleAvatar(backgroundColor: Colors.green, child: Icon(Icons.home, color: Colors.white,),),
+                      const Text('大法师发生啊烧豆腐爱上', style: TextStyle(color: Colors.white),),
+                    ],)
+                  );
+
+                  await Future.delayed(Duration(seconds: 2));
+
+
+                  MyAlert.showSnack(
+                      child: const Text('大法师发生啊烧豆腐爱上', style: TextStyle(color: Colors.white),),
+                  );
+                }, child: const Text('展示 snack')
             ),
           ],
         ),

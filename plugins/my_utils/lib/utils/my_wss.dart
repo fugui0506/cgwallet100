@@ -9,11 +9,12 @@ class MyWss {
     required this.isCanConnect,
     required this.heartbeatMessage,
     this.heartbeatSeconds = 10,
-    this.onMessageReceived,
     this.headers = const {},
     this.maxRetryCount = 3,
     this.retrySeconds = 1,
+    this.timeoutSeconds = 2,
     this.onMaxRetryOut,
+    this.onMessageReceived,
   }) {
     connect();
   }
@@ -28,6 +29,7 @@ class MyWss {
   final void Function()? onMaxRetryOut;
   final dynamic heartbeatMessage;
   final int heartbeatSeconds;
+  final int timeoutSeconds;
 
   // WebSocket 连接对象
   IOWebSocketChannel? _webSocketChannel;
@@ -97,8 +99,8 @@ class MyWss {
       _webSocketChannel = IOWebSocketChannel.connect(
         Uri.parse(urls[_index]),
         headers: headers,
-        pingInterval: const Duration(seconds: 5),
-        connectTimeout: const Duration(seconds: 3),
+        pingInterval: Duration(seconds: heartbeatSeconds),
+        connectTimeout: Duration(seconds: timeoutSeconds),
         customClient: HttpClient()..badCertificateCallback = (cert, host, port) => true,
       );
 
@@ -207,7 +209,7 @@ class MyWss {
     _cancelTimer(_heartbeatTimer);
 
     try {
-      await _webSocketChannel?.sink.close().timeout(Duration(seconds: 3), onTimeout: () {
+      await _webSocketChannel?.sink.close().timeout(Duration(seconds: timeoutSeconds), onTimeout: () {
         log('⏰ 关闭操作超时: ${urls[_index]}');
         return null;
       });

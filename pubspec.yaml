@@ -17,9 +17,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
-  # GetX
-  get: ^5.0.0-release-candidate-9.2.1
-
   # 获取设备信息
   my_device_info:
     path: ./plugins/my_device_info
@@ -39,6 +36,9 @@ dependencies:
   # 常用组件
   my_widgets:
     path: ./plugins/my_widgets
+
+  # GetX
+  get: ^5.0.0-release-candidate-9.2.1
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_widgets/my_widgets.dart';
+import 'package:my_widgets/my_widgets_method.dart';
 import 'package:my_widgets/my_widgets_platform_interface.dart';
 import 'package:my_widgets/my_widgets_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';

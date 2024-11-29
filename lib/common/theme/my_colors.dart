@@ -1,6 +1,10 @@
 part of 'theme.dart';
 
 class MyColors {
+  static final MyColors _instance = MyColors._internal();
+  factory MyColors() => _instance;
+  MyColors._internal();
+
   // 主色-固定色
   Color get primary => const Color(0xFF586BF9);
   // 主色上面的颜色
@@ -18,7 +22,6 @@ class MyColors {
 
   // 待收款
   Color get onReceiving => const Color(0xFFC56538);
-
 
   // 取消
   Color get onCancel => const Color(0xFF999999);

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:my_widgets/my_widgets.dart';
+import 'package:my_widgets/my_widgets_method.dart';
 
 void main() {
   runApp(const MyApp());

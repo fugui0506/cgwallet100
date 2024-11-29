@@ -10,7 +10,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:my_widgets/my_widgets.dart';
+import 'package:my_widgets/my_widgets_method.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
