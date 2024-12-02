@@ -138,7 +138,7 @@ class _MyAlertState extends State<MyAlert> with TickerProviderStateMixin {
       ? Container(
         width: double.infinity,
         height: double.infinity,
-        color: Colors.black.withOpacity(0.3),
+        color: Colors.black.withOpacity(0.1),
         child: loadingBox,
       ) : const SizedBox();
 
@@ -181,9 +181,9 @@ class _SnackBarWidget extends StatelessWidget {
         return Visibility(
           visible: opacityAnimation.value != 0,
           child: Opacity(
-            opacity: opacityAnimation.value, // 控制透明度
+            opacity: opacityAnimation.value,
             child: Transform.translate(
-              offset: Offset(0, positionAnimation.value), // 控制位置
+              offset: Offset(0, positionAnimation.value),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: ConstrainedBox(
