@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
 class MyTurntable extends StatefulWidget {
@@ -37,24 +38,59 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
   int _lightIndex = 0;
   Timer? _lightTimer;
 
+  List<ui.Image?> _images = [];
+
   @override
   void initState() {
+    super.initState();
     // 初始化 controller
-    _animationController = AnimationController(
-      vsync: this,
-    );
+    _animationController = AnimationController(vsync: this);
 
     // 初始化 animation
     _animationSpinner = Tween<double>(
       begin: 0,
       end: 0,
     ).animate(CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.linear
+      parent: _animationController,
+      curve: Curves.linear,
     ));
 
-    super.initState();
+    _images = List.generate(widget.items.length, (i) => null);
+
+    _loadImages();
   }
+
+  Future<void> _loadImages() async {
+    for (int i = 0; i < widget.items.length; i++) {
+      final image = await _getWidgetImage(widget.items[i].image);
+      if (image != null) {
+        setState(() {
+          _images[i] = image;
+        });
+      }
+    }
+  }
+
+  // 将 Image 转换为 ui.Image
+  Future<ui.Image?> _getWidgetImage(Image? image) async {
+    if (image == null) {
+      return null;
+    }
+    final Completer<ui.Image> completer = Completer();
+
+    image.image
+        .resolve(const ImageConfiguration())
+        .addListener(
+      ImageStreamListener(
+            (ImageInfo info, bool synchronousCall) {
+          completer.complete(info.image);
+        },
+      ),
+    );
+
+    return completer.future;
+  }
+
 
   @override
   void dispose() {
@@ -64,9 +100,11 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
   }
 
   void _startLightAnimation() {
-    _lightTimer = Timer.periodic( const Duration(milliseconds: 200), (timer) {
+    _lightTimer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
       setState(() {
-        _lightIndex = widget.lights == null || widget.lights!.isEmpty ? 0 : (_lightIndex + 1) % widget.lights!.length;
+        _lightIndex = widget.lights == null || widget.lights!.isEmpty
+          ? 0
+          : (_lightIndex + 1) % widget.lights!.length;
       });
     });
   }
@@ -76,13 +114,8 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
     _lightTimer = null;
   }
 
-  // duration: 转动时间
-  // rounds: 转动圈数
-  // angle: 停止的角度也就是中奖角度
-  // curve: 动画的类型
   Future<void> _startSpin(double duration, int rounds, double angle, Curve curve) async {
     _animationController.duration = Duration(milliseconds: (duration * 1000).toInt());
-
     _animationSpinner = Tween<double>(
       begin: 0,
       end: rounds * 2 * math.pi + angle * math.pi / 180,
@@ -90,7 +123,6 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
       parent: _animationController,
       curve: curve,
     ));
-
     _animationController.reset();
     await _animationController.forward();
   }
@@ -106,7 +138,6 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
       return;
     } else {
       _index = index;
-
       final angleEach = 360 / widget.items.length;
       final startAngleRad = index * angleEach + angleEach / 6;
       final sweepAngleRad = (index + 1) * angleEach - angleEach / 6;
@@ -136,7 +167,6 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
     _isSpinning = true;
     _startLightAnimation();
     _onSetReward();
-    // 持续匀速转动
     while (_index == null) {
       await _startSpin(1, 8, 0, Curves.linear);
     }
@@ -145,13 +175,13 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.center, children: [
+      // Lights container
       Container(
         constraints: BoxConstraints(maxWidth: widget.radius, maxHeight: widget.radius),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           boxShadow: [BoxShadow(
             color: Colors.brown.withOpacity(0.2),
-            // spreadRadius: 2,
             offset: const Offset(0, 0),
             blurRadius: 24,
           )],
@@ -164,10 +194,11 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
               child: child,
             );
           },
-          child: widget.lights?[_lightIndex],
+          child: widget.lights?[_lightIndex] ?? const SizedBox(),
         ),
       ),
 
+      // Turntable container
       Container(
         constraints: BoxConstraints(maxWidth: widget.radius, maxHeight: widget.radius),
         child: LayoutBuilder(builder: (context, constraints) {
@@ -189,8 +220,8 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
                 builder: (context, child) => Transform.rotate(
                   angle: _animationSpinner.value,
                   child: widget.items.isEmpty
-                      ? CircleAvatar(radius: constraints.maxWidth, backgroundColor: Colors.deepOrangeAccent)
-                      : CustomPaint(size: Size(constraints.maxWidth , constraints.maxWidth), painter: MyCustomPainter(list: widget.items)),
+                    ? CircleAvatar(radius: constraints.maxWidth, backgroundColor: Colors.deepOrangeAccent)
+                    : CustomPaint(size: Size(constraints.maxWidth , constraints.maxWidth), painter: MyCustomPainter(list: widget.items, images: _images)),
                 ),
               ),
             ),
@@ -198,6 +229,7 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
         }),
       ),
 
+      // Pointer button
       IconButton(
         constraints: BoxConstraints(maxWidth: widget.radius * 80 / 200, maxHeight: widget.radius * 80 / 200),
         onPressed: _handleGo,
@@ -209,120 +241,159 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
 
 class MyCustomPainter extends CustomPainter {
   final List<MySectorItem> list;
+  final List<ui.Image?> images;
 
   MyCustomPainter({
-    required this.list
+    required this.list,
+    required this.images,
   });
+
+  final TextStyle _defaultTextStyle = const TextStyle(
+    color: Colors.black,
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+  );
 
   @override
   void paint(Canvas canvas, Size size) {
-    // 每一个扇形的角度
     final angle = 360 / list.length;
-
     list.asMap().entries.forEach((e) {
       final index = e.key;
       final item = e.value;
-
-      // 扇形的角度
       final startAngleRad = (index * angle - 90) * math.pi / 180;
       final sweepAngleRad = angle * math.pi / 180;
       final center = Offset(size.width / 2, size.height / 2);
 
-      // 扇形填充颜色
-      Paint paintFill = Paint()
-        ..color = item.titleBackgroundColor ?? Colors.orange
-        ..style = PaintingStyle.fill;
-
-      // 中心区域的小扇形
-      Paint paintCenter = Paint()
-        ..color = item.amountBackgroundColor ?? Colors.yellow
-        ..style = PaintingStyle.fill;
-
-      // 扇形边框
-      Paint paintStroke = Paint()
-        ..color = Colors.orangeAccent
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.6;
-
-      // 扇形的边界矩形
-      Rect rect = Rect.fromCircle(
+      _drawSector(
+        canvas: canvas,
         center: center,
         radius: size.width / 2,
+        startAngle: startAngleRad,
+        sweepAngle: sweepAngleRad,
+        backgroundColor: item.titleBackgroundColor,
       );
 
-      Rect rectCenter = Rect.fromCircle(
+      _drawSector(
+        canvas: canvas,
         center: center,
         radius: size.width / 3,
+        startAngle: startAngleRad,
+        sweepAngle: sweepAngleRad,
+        backgroundColor: item.amountBackgroundColor,
+        borderWidth: 1.6,
       );
 
-      // 绘制扇形填充和边框
-      canvas.drawArc(rect, startAngleRad, sweepAngleRad, true, paintFill);
-      canvas.drawArc(rectCenter, startAngleRad, sweepAngleRad, true, paintCenter);
-      canvas.drawArc(rect, startAngleRad, sweepAngleRad, true, paintStroke);
+      _drawText(
+        canvas: canvas,
+        size: size,
+        radius: size.width / 2 - size.width * 20 / 200,
+        angle: startAngleRad + sweepAngleRad / 2,
+        text: item.titleText,
+        style: _defaultTextStyle.copyWith(color: item.titleTextColor),
+      );
 
-      if (item.titleText != null) {
-        _drawText(
-          canvas: canvas,
-          text: item.titleText!,
-          center: center,
-          radius: size.width / 2 - size.width * 20 / 200,
-          angle: startAngleRad + sweepAngleRad / 2,
-          color: item.titleTextColor, fontSize: 14
-        );
-      }
-
-      if (item.amountText != null) {
-        _drawText(
-          canvas: canvas,
-          text: item.amountText!,
-          center: center,
-          radius: size.width / 3 - size.width * 20 / 200,
-          angle: startAngleRad + sweepAngleRad / 2,
-          color: item.amountTextColor,
-          fontSize: 14
-        );
-      }
+      _drawText(
+        canvas: canvas,
+        size: size,
+        radius: size.width / 3 - size.width * 20 / 200,
+        angle: startAngleRad + sweepAngleRad / 2,
+        text: item.amountText,
+        style: _defaultTextStyle.copyWith(color: item.amountTextColor),
+        image: images[index],
+      );
     });
   }
 
-  //绘制文本方法 radius 越大离中心点越远
-  void _drawText({
+  void _drawSector({
     required Canvas canvas,
-    required String text,
     required Offset center,
     required double radius,
-    required double angle,
-    Color? color,
-    double? fontSize,
+    required double startAngle,
+    required double sweepAngle,
+    Color? backgroundColor,
+    double? borderWidth,
   }) {
-    final textPainter = TextPainter(
-      text: TextSpan(
-        text: text,
-        style: TextStyle(
-          color: color,
-          fontSize: fontSize,
-          fontWeight: FontWeight.bold,
+    Paint paintFill = Paint()
+      ..color = backgroundColor ?? Colors.orange
+      ..style = PaintingStyle.fill;
+
+    Paint paintStroke = Paint()
+      ..color = Colors.orangeAccent
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = borderWidth ?? 1.6;
+
+    Rect rect = Rect.fromCircle(center: center, radius: radius);
+    canvas.drawArc(rect, startAngle, sweepAngle, true, paintFill);
+    if (borderWidth != null) {
+      canvas.drawArc(rect, startAngle, sweepAngle, true, paintStroke);
+    }
+  }
+
+  void _drawText({
+    required Canvas canvas,
+    required Size size,
+    required double radius,
+    required double angle,
+    String? text,
+    ui.Image? image,
+    required TextStyle style,
+  }) {
+    // 绘制图像
+    if (image != null) {
+      final iconSize = size.width * 30 / 200;
+      final center = Offset(size.width / 2, size.height / 2);
+
+      final rect = Rect.fromCenter(
+        center: Offset(
+          center.dx + radius * math.cos(angle),
+          center.dy + radius * math.sin(angle),
         ),
-      ),
-      textDirection: TextDirection.ltr,
-    );
-    textPainter.layout();
+        width: iconSize,
+        height: iconSize,
+      );
 
-    final textCenter = Offset(
-      center.dx + radius * math.cos(angle),
-      center.dy + radius * math.sin(angle),
-    );
+      // 在绘制图像前应用旋转，使其与扇形边缘对齐
+      canvas.save();
+      canvas.translate(
+        rect.center.dx,
+        rect.center.dy,
+      );
+      canvas.rotate(angle + math.pi / 2);
+      canvas.translate(
+        -rect.center.dx,
+        -rect.center.dy,
+      );
 
-    canvas.save();
-    canvas.translate(textCenter.dx, textCenter.dy);
-    canvas.rotate(angle + math.pi / 2);
+      // 绘制图像
+      canvas.drawImageRect(
+        image,
+        Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
+        rect,
+        Paint(),
+      );
+      canvas.restore();
+    } else if (text != null) {
+      final textPainter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        textDirection: TextDirection.ltr,
+      )..layout();
 
-    textPainter.paint(
-      canvas,
-      Offset(-textPainter.width / 2, -textPainter.height / 2),
-    );
+      final textCenter = Offset(
+        size.width / 2 + radius * math.cos(angle),
+        size.height / 2 + radius * math.sin(angle),
+      );
 
-    canvas.restore();
+      canvas.save();
+      canvas.translate(textCenter.dx, textCenter.dy);
+      canvas.rotate(angle + math.pi / 2);
+
+      textPainter.paint(
+        canvas,
+        Offset(-textPainter.width / 2, -textPainter.height / 2),
+      );
+
+      canvas.restore();
+    }
   }
 
   @override
@@ -339,6 +410,7 @@ class MySectorItem {
     this.amountBackgroundColor = Colors.white,
     this.titleTextColor = Colors.black,
     this.amountTextColor = Colors.black,
+    this.image,
   });
 
   final String? titleText;
@@ -347,4 +419,5 @@ class MySectorItem {
   final Color? amountBackgroundColor;
   final Color? titleTextColor;
   final Color? amountTextColor;
+  final Image? image;
 }

@@ -47,6 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> wssUrls = [];
   List<String> baseUrls = [];
 
+
+
   @override
   Widget build(BuildContext context) {
     MyDio? myDio;
@@ -442,9 +444,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   titleText: "0没中奖",
                   titleTextColor: Colors.white,
                   titleBackgroundColor: Colors.deepOrangeAccent,
-                  amountText: '10',
+                  // amountText: '10',
                   amountTextColor: Colors.deepOrangeAccent,
                   amountBackgroundColor: Colors.yellow,
+                  image: Image.asset('assets/common/agency_level.png'),
                 ),
                 MySectorItem(
                   titleText: "1二等奖",
