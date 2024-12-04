@@ -25,7 +25,7 @@ class MySlidable extends StatefulWidget {
 
 class _MySlidableState extends State<MySlidable> with TickerProviderStateMixin {
   late SlidableController _controller;
-  late double animation = 0.0;
+  late double _animation = 0.0;
 
   @override
   void initState() {
@@ -43,7 +43,7 @@ class _MySlidableState extends State<MySlidable> with TickerProviderStateMixin {
 
   void _animationListener() {
     setState(() {
-      animation = _controller.animation.value;
+      _animation = _controller.animation.value;
     });
   }
 
@@ -55,7 +55,7 @@ class _MySlidableState extends State<MySlidable> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (animation > 0.0) {
+        if (_animation > 0.0) {
           closeSlidable();
         }
         widget.onPressed?.call();

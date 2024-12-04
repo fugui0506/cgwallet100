@@ -434,7 +434,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
 
             MyTurntable(
-              radius: double.infinity,
+              size: 500,
               lights: [
                 Image.asset('assets/common/activity_wheel_right.png', fit: BoxFit.fitWidth),
                 Image.asset('assets/common/activity_wheel_left.png', fit: BoxFit.fitWidth),
@@ -489,6 +489,22 @@ class _MyHomePageState extends State<MyHomePage> {
                   amountTextColor: Colors.deepOrangeAccent,
                   amountBackgroundColor: Colors.yellow,
                 ),
+                MySectorItem(
+                  titleText: "6谢谢参与",
+                  titleTextColor: Colors.white,
+                  titleBackgroundColor: Colors.red,
+                  amountText: '40',
+                  amountTextColor: Colors.deepOrangeAccent,
+                  amountBackgroundColor: Colors.yellow,
+                ),
+                MySectorItem(
+                  titleText: "7谢谢参与",
+                  titleTextColor: Colors.white,
+                  titleBackgroundColor: Colors.orangeAccent,
+                  amountText: '90',
+                  amountTextColor: Colors.deepOrangeAccent,
+                  amountBackgroundColor: Colors.yellow,
+                ),
               ],
               onSetReward: () async {
                 Random random = Random();
@@ -537,6 +553,66 @@ class _MyHomePageState extends State<MyHomePage> {
                   ]),
                 );
               },
+            ),
+
+            FilledButton(
+              onPressed: () async {
+                final result = await MyDialog.bottomSheet(context,
+                  backgroundColor: Colors.white,
+                  children: [
+                    // Padding(padding: EdgeInsets.all(16), child: TextField(
+                    //   autofocus: true,
+                    //   decoration: InputDecoration(hintText: '请输入内容'),
+                    // )),
+                    // Container(
+                    //   color: Colors.red,
+                    //   height: 200,
+                    // ),
+                    MyNumberPasswordInput(
+                      borderColor: Colors.blue,
+                      length: 6,
+                      titleTextStyle: TextStyle(fontSize: 18),
+                      title: '数字键盘',
+                      backgroundColor: Colors.black,
+                      focusColor: Colors.blue,
+                    )
+                  ],
+                );
+                MyLogger.w('$result');
+              },
+              child: const Text('数字键盘'),
+            ),
+
+            FilledButton(
+              onPressed: () async {
+                MyDialog.show(context, child: MyNumberPasswordInput(
+                  borderColor: Colors.blue,
+                  length: 6,
+                  titleTextStyle: TextStyle(fontSize: 18),
+                  title: '数字键盘',
+                  backgroundColor: Colors.black,
+                  focusColor: Colors.blue,
+                ));
+              }, child: const Text('dialog')
+            ),
+
+            MyCarousel(
+              isAutoPlay: true,
+              children: [
+                MyImage(imageUrl: 'https://media.istockphoto.com/id/1594228594/photo/close-up-image-of-a-young-creative-artists-hands-smeared-with-watercolors-holding-a-spatula.jpg?s=2048x2048&w=is&k=20&c=AmejOm5Kor9UQEI11Ouls6KRwTMP5ytV38jr__tA0Zs='),
+                MyImage(imageUrl: 'https://media.istockphoto.com/id/1594228594/photo/close-up-image-of-a-young-creative-artists-hands-smeared-with-watercolors-holding-a-spatula.jpg?s=2048x2048&w=is&k=20&c=AmejOm5Kor9UQEI11Ouls6KRwTMP5ytV38jr__tA0Zs='),
+                MyImage(imageUrl: 'https://media.istockphoto.com/id/1594228594/photo/close-up-image-of-a-young-creative-artists-hands-smeared-with-watercolors-holding-a-spatula.jpg?s=2048x2048&w=is&k=20&c=AmejOm5Kor9UQEI11Ouls6KRwTMP5ytV38jr__tA0Zs='),
+              ], onChanged: (index) {
+                MyLogger.w('$index');
+              },
+            ),
+
+            MyMarquee(
+              contents: [
+                '这是一个测试的',
+                '这是劳动节啊是龙卷风啊达到六块腹肌啊三闾大夫',
+                '啊烧豆腐看见阿拉斯加地方啊考六级啊了烧豆腐卷阿里斯顿肌肤啦睡觉地方阿斯顿六块腹肌阿拉斯加地方了啊是江东父老卡上地方了就',
+              ],
             ),
           ],
         ),

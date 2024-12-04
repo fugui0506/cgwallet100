@@ -15,12 +15,12 @@ class MyMarquee extends StatefulWidget {
 }
 
 class _MyMarqueeState extends State<MyMarquee> {
-  final ScrollController scrollController = ScrollController();
-  int index = 0;
+  final ScrollController _scrollController = ScrollController();
+  int _index = 0;
 
   @override
   void dispose() {
-    scrollController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -31,19 +31,19 @@ class _MyMarqueeState extends State<MyMarquee> {
 
   void init() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (scrollController.hasClients && mounted) {
-        final maxScrollExtent = scrollController.position.maxScrollExtent;
+      if (_scrollController.hasClients && mounted) {
+        final maxScrollExtent = _scrollController.position.maxScrollExtent;
         final duration = Duration(seconds: ((maxScrollExtent * 4) / 360).round()); // Adjust duration based on speed
 
-        scrollController.animateTo(
+        _scrollController.animateTo(
           maxScrollExtent,
           duration: duration,
           curve: Curves.linear,
         ).then((_) {
-          if (scrollController.hasClients && mounted) {
-            scrollController.jumpTo(0.0);
+          if (_scrollController.hasClients && mounted) {
+            _scrollController.jumpTo(0.0);
             setState(() {
-              index = (index + 1) % widget.contents.length;
+              _index = (_index + 1) % widget.contents.length;
             });
           }
         });
@@ -58,11 +58,11 @@ class _MyMarqueeState extends State<MyMarquee> {
       builder: (context, constraints) {
         return SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          controller: scrollController,
+          controller: _scrollController,
           child: Row(
             children: [
               SizedBox(width: constraints.maxWidth),
-              Text(widget.contents[index], maxLines: 1, style: widget.textStyle, textDirection: TextDirection.ltr),
+              Text(widget.contents[_index], maxLines: 1, style: widget.textStyle, textDirection: TextDirection.ltr),
               SizedBox(width: constraints.maxWidth),
             ],
           ),

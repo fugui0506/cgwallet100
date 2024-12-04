@@ -39,8 +39,8 @@ class _MyAlertState extends State<MyAlert> with TickerProviderStateMixin {
   bool _isShowLoading = false;
   bool _isShowBlock = false;
 
-  List<Widget> snacks = [];
-  List<AnimationController> animationControllers = [];
+  final List<Widget> _snacks = [];
+  final List<AnimationController> _animationControllers = [];
 
   void showLoading() {
     setState(() {
@@ -94,15 +94,15 @@ class _MyAlertState extends State<MyAlert> with TickerProviderStateMixin {
       if (status == AnimationStatus.completed) {
         // 动画完成后移除对应的 Snackbar 和动画控制器
         setState(() {
-          snacks.removeAt(0);
-          animationControllers.removeAt(0);
+          _snacks.removeAt(0);
+          _animationControllers.removeAt(0);
         });
         snackAnimationController.dispose();
       }
     });
 
     setState(() {
-      snacks.add(
+      _snacks.add(
         _SnackBarWidget(
           snackAnimationController: snackAnimationController,
           opacityAnimation: opacityAnimation,
@@ -110,7 +110,7 @@ class _MyAlertState extends State<MyAlert> with TickerProviderStateMixin {
           child: child,
         ),
       );
-      animationControllers.add(snackAnimationController);
+      _animationControllers.add(snackAnimationController);
     });
   }
 
@@ -149,7 +149,7 @@ class _MyAlertState extends State<MyAlert> with TickerProviderStateMixin {
         widget.child ?? const SizedBox(),
         loading,
         block,
-        ...snacks,
+        ..._snacks,
       ],
     );
   }

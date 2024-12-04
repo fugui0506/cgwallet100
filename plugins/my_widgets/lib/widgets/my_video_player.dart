@@ -22,34 +22,34 @@ class MyVideoPlayer extends StatefulWidget {
 }
 
 class _MyVideoPlayerState extends State<MyVideoPlayer> {
-  late VideoPlayerController videoPlayerController;
-  late ChewieController chewieController;
+  late VideoPlayerController _videoPlayerController;
+  late ChewieController _chewieController;
 
-  bool isShowLoading = true;
+  bool _isShowLoading = true;
 
-  final customControls = MaterialControls();
+  final _customControls = MaterialControls();
 
   Future<void> initPlayer() async {
     if (widget.videoUrl == null && widget.file == null) {
       throw('视频地址和视频文件不能同时为空');
     } else {
       if (widget.file != null) {
-        videoPlayerController = VideoPlayerController.file(widget.file!);
+        _videoPlayerController = VideoPlayerController.file(widget.file!);
       } else {
-        videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl!));
+        _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl!));
       }
     }
     
-    chewieController = ChewieController(
-      videoPlayerController: videoPlayerController,
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController,
       autoPlay: false,
-      customControls: customControls,
+      customControls: _customControls,
     );
 
     try {
-      await videoPlayerController.initialize();
+      await _videoPlayerController.initialize();
       setState(() {
-        isShowLoading = false;
+        _isShowLoading = false;
       });
 
       log('视频初始化成功');
@@ -68,13 +68,13 @@ class _MyVideoPlayerState extends State<MyVideoPlayer> {
   void didUpdateWidget(covariant MyVideoPlayer oldWidget) {
     // 页面刷新的时候
     // 先暂停旧的视频，然后重新初始化
-    videoPlayerController.pause();
+    _videoPlayerController.pause();
 
-    videoPlayerController.dispose().then((value) {
-      chewieController.dispose();
+    _videoPlayerController.dispose().then((value) {
+      _chewieController.dispose();
       initPlayer();
       setState(() {
-        isShowLoading = true;
+        _isShowLoading = true;
       });
     });
 
@@ -83,8 +83,8 @@ class _MyVideoPlayerState extends State<MyVideoPlayer> {
 
   @override
   void dispose() {
-    videoPlayerController.dispose();
-    chewieController.dispose();
+    _videoPlayerController.dispose();
+    _chewieController.dispose();
 
     super.dispose();
   }
@@ -124,12 +124,12 @@ class _MyVideoPlayerState extends State<MyVideoPlayer> {
     // 最后把加载中放到顶层
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: size, maxHeight: size), 
-      child: isShowLoading
-      ? loadingBox
-      : Container(
-        color: Colors.black,
-        child: Chewie(controller: chewieController),
-      )
+      child: _isShowLoading
+        ? loadingBox
+        : Container(
+            color: Colors.black,
+            child: Chewie(controller: _chewieController),
+          )
     );
   }
 }
