@@ -9,7 +9,7 @@ class MyTurntable extends StatefulWidget {
     super.key,
     required this.onSetReward,
     required this.items,
-    required this.radius,
+    required this.size,
     this.onResult,
     this.onError,
     this.pointer,
@@ -21,7 +21,7 @@ class MyTurntable extends StatefulWidget {
   final void Function()? onError;
   final Widget? pointer;
   final List<MySectorItem> items;
-  final double radius;
+  final double size;
   final List<Widget>? lights;
 
   @override
@@ -79,13 +79,10 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
     final Completer<ui.Image> completer = Completer();
 
     image.image
-        .resolve(const ImageConfiguration())
-        .addListener(
-      ImageStreamListener(
-            (ImageInfo info, bool synchronousCall) {
-          completer.complete(info.image);
-        },
-      ),
+      .resolve(const ImageConfiguration())
+      .addListener(ImageStreamListener((ImageInfo info, bool synchronousCall) {
+        completer.complete(info.image);
+      }),
     );
 
     return completer.future;
@@ -129,7 +126,7 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
 
   Future<void> _onSetReward() async {
     final index = await widget.onSetReward();
-    if (index == null) {
+    if (index == null || index > widget.items.length - 1) {
       widget.onError?.call();
       _animationController.stop();
       _animationController.reset();
@@ -145,7 +142,7 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
       final random = math.Random();
       final angle = startAngleRad + (sweepAngleRad - startAngleRad) * random.nextDouble();
 
-      await _startSpin(4, 6, 360 - angle, Curves.linearToEaseOut);
+      await _startSpin(8, 7, 360 - angle, Curves.easeOutExpo);
       _index = null;
       _isSpinning = false;
       _stopLightAnimation();
@@ -168,7 +165,7 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
     _startLightAnimation();
     _onSetReward();
     while (_index == null) {
-      await _startSpin(1, 8, 0, Curves.linear);
+      await _startSpin(1, 6, 0, Curves.linear);
     }
   }
 
@@ -177,7 +174,7 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
     return Stack(alignment: Alignment.center, children: [
       // Lights container
       Container(
-        constraints: BoxConstraints(maxWidth: widget.radius, maxHeight: widget.radius),
+        constraints: BoxConstraints(maxWidth: widget.size, maxHeight: widget.size),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           boxShadow: [BoxShadow(
@@ -200,12 +197,12 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
 
       // Turntable container
       Container(
-        constraints: BoxConstraints(maxWidth: widget.radius, maxHeight: widget.radius),
+        constraints: BoxConstraints(maxWidth: widget.size, maxHeight: widget.size),
         child: LayoutBuilder(builder: (context, constraints) {
           return Container(
             width: constraints.maxWidth,
             height: constraints.maxWidth,
-            padding: EdgeInsets.all(constraints.maxWidth * 24 / 200),
+            padding: EdgeInsets.all(constraints.maxWidth * 22 / 200),
             child: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -231,7 +228,7 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
 
       // Pointer button
       IconButton(
-        constraints: BoxConstraints(maxWidth: widget.radius * 80 / 200, maxHeight: widget.radius * 80 / 200),
+        constraints: BoxConstraints(maxWidth: widget.size * 80 / 200, maxHeight: widget.size * 80 / 200),
         onPressed: _handleGo,
         icon: widget.pointer ?? const SizedBox(),
       ),
