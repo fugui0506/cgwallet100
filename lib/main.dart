@@ -449,7 +449,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   titleText: "0没中奖",
                   titleTextColor: Colors.white,
                   titleBackgroundColor: Colors.deepOrangeAccent,
-                  // amountText: '10',
+                  amountText: '10',
                   amountTextColor: Colors.deepOrangeAccent,
                   amountBackgroundColor: Colors.yellow,
                   image: Image.asset('assets/common/agency_level.png'),
