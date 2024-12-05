@@ -9,6 +9,7 @@ class MyImage extends StatelessWidget {
     this.height,
     this.fit = BoxFit.cover,
     this.loadingWidget,
+    this.isAlive = true,
   });
 
   final String imageUrl;
@@ -16,45 +17,77 @@ class MyImage extends StatelessWidget {
   final double? height;
   final BoxFit? fit;
   final Widget? loadingWidget;
+  final bool isAlive;
 
   @override
   Widget build(BuildContext context) {
-    final loading = const CupertinoActivityIndicator();
-    Icon brokenImage = Icon(Icons.broken_image, size: 64, color: Colors.black.withOpacity(0.2));
-    return RepaintBoundary(
-      child: Image.network(imageUrl, 
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress != null) {
-            return loadingWidget ?? loading;
-          } else {
-            return child;
-          }
-        },
-        errorBuilder: (context, error, stackTrace) {
-          return loadingWidget ?? SizedBox(
-            width: width,
-            height: height,
-            child: LayoutBuilder(builder: (context, container) {
-              return SizedBox(
-                width: container.maxWidth / 3,
-                height: container.maxHeight / 3,
-                child: FittedBox(child: brokenImage),
-              );
-            }),
-          );
-        },
-        frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {      
-          if (frame == null) {
-            return loadingWidget ?? loading;
-          } else {
-            return child;
-          }
-        },
-        fit: fit,
-        width: width,
-        height: height,
-      ),
+    final loading = Container(
+      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width, maxHeight: MediaQuery.of(context).size.height),
+      color: Colors.grey,
+      width: width,
+      height: height,
+      child:  const CupertinoActivityIndicator(),
     );
+    final brokenWidget = Container(
+      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width, maxHeight: MediaQuery.of(context).size.height),
+      color: Colors.grey,
+      width: width,
+      height: height,
+      child: FittedBox(child: Padding(padding: EdgeInsets.all(8), child: Icon(Icons.broken_image, color: Colors.black.withOpacity(0.3)))),
+    );
+    try {
+      return _KeepAliveWrapper(isAlive: isAlive, child: RepaintBoundary(
+        child: Image.network(imageUrl,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress != null) {
+              return loadingWidget ?? loading;
+            } else {
+              return child;
+            }
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return loadingWidget ?? brokenWidget;
+          },
+          frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
+            if (frame == null) {
+              return loadingWidget ?? loading;
+            } else {
+              return child;
+            }
+          },
+          fit: fit,
+          width: width,
+          height: height,
+        ),
+      ));
+    } catch (e) {
+      return _KeepAliveWrapper(isAlive: isAlive, child: loadingWidget ?? brokenWidget);
+    }
+  }
+}
+
+class _KeepAliveWrapper extends StatefulWidget {
+  final Widget child;
+  final bool isAlive;
+
+  const _KeepAliveWrapper({
+    // super.key,
+    required this.child,
+    this.isAlive = true,
+  });
+
+  @override
+  State<_KeepAliveWrapper> createState() => _KeepAliveWrapperState();
+}
+
+class _KeepAliveWrapperState extends State<_KeepAliveWrapper> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => widget.isAlive;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
   }
 }
 

@@ -9,12 +9,12 @@ class MyDialog {
     bool? isDismissible,
     double? radius,
     Widget? child,
-    Color? color,
+    Color? backgroundColor,
   }) => _instance._show(context,
     isDismissible: isDismissible,
     radius: radius,
     child: child,
-    color: color,
+    backgroundColor: backgroundColor,
   );
 
   static Future<dynamic> bottomSheet(BuildContext context, {
@@ -31,13 +31,14 @@ class MyDialog {
     bool? isDismissible,
     double? radius,
     Widget? child,
-    Color? color,
+    Color? backgroundColor,
   }) async {
     final navigator = Navigator.of(context);
 
     final isCanPass = await showDialog<dynamic>(context: context, builder: (context) {
       return Dialog(
-        backgroundColor: color,
+        backgroundColor: backgroundColor,
+        // insetPadding: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radius ?? 16.0),
         ),
@@ -51,7 +52,7 @@ class MyDialog {
         isDismissible: isDismissible,
         radius: radius,
         child: child,
-        color: color,
+        backgroundColor: backgroundColor,
       );
     }
     return isCanPass;

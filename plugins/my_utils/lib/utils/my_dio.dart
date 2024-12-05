@@ -72,8 +72,8 @@ class MyDio {
     log("❌" * 80);
     log("❌ 请求地址 => ${err.requestOptions.uri}");
     log("❌ 请求方式 => ${err.requestOptions.method}");
-    log("❌ 请求头${headers == '{}' ? ' => $headers': ':\n$headers'}");
-    log("❌ 请求参数${data == '{}' ? ' => $data': ':\n$data'}");
+    log("❌ 请求头${headers == '{}' ? ' => $headers': ':$headers'}");
+    log("❌ 请求参数${data == '{}' ? ' => $data': ':$data'}");
     log("❌ 错误信息 => ${err.message}");
     log("❌ ${err.error}");
     log("❌" * 80);
@@ -87,9 +87,9 @@ class MyDio {
     log("✅" * 80);
     log("✅ 请求地址 => ${response.requestOptions.uri}");
     log("✅ 请求方式 => ${response.requestOptions.method}");
-    log("✅ 请求头${headers == '{}' ? ' => $headers': ':\n$headers'}");
-    log("✅ 请求参数${parameters == '{}' ? ' => $parameters': ':\n$parameters'}");
-    log("✅ 返回数据${data == '{}' ? ' => $data': ':\n$data'}");
+    log("✅ 请求头${headers == '{}' ? ' => $headers': ':$headers'}");
+    log("✅ 请求参数${parameters == '{}' ? ' => $parameters': ':$parameters'}");
+    log("✅ 返回数据${data == '{}' ? ' => $data': ':$data'}");
     log("✅" * 80);
   }
 

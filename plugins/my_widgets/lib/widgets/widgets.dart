@@ -1,6 +1,7 @@
 library;
 
 export 'my_alert.dart';
+export 'my_alive.dart';
 export 'my_carousel.dart';
 export 'my_dialog.dart';
 export 'my_html.dart';

@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cgwallet/common/common.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:my_deep_link/my_deep_link.dart';
 import 'package:my_device_info/my_device_info.dart';
@@ -48,11 +50,13 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> baseUrls = [];
 
 
-
   @override
   Widget build(BuildContext context) {
     MyDio? myDio;
     MyWss? myWss;
+
+    final carouselIndex = 0.obs;
+    final navigation = Navigator.of(context);
 
     MyDeepLink.getDeepLink(
       onSuccess: (value) async {
@@ -78,14 +82,22 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             FilledButton(
               onPressed: ()  async {
+                showLoading();
                 final info = await MyDeviceInfo.getDeviceInfo();
+                hideLoading();
 
-                MyLogger.w('设备配置信息 --> ${info.toJson()}');
+                if (navigation.mounted) {
+                  showAlert(navigation.context,
+                    title: '',
+                    content: '设备信息: ${info.toJson()}',
+                  );
+                }
               },
               child: const Text('获取设备信息'),
             ),
             FilledButton(
                 onPressed: ()  async {
+                  showLoading();
                   final env = await MyEnvironment.initialize();
 
                   String info = '';
@@ -108,7 +120,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       info = await MyEnvironment.getConfig(MyConfig.urls.testUrls);
                   }
                   info = info.aesDecrypt(MyConfig.key.aesKey);
-                  MyLogger.w('解密后的配置信息 --> $info');
+                  hideLoading();
+                  if (navigation.mounted) {
+                    showAlert(navigation.context,
+                      title: '获取环境变量',
+                      content: '解密后的配置信息: ${info.format()}',
+                    );
+                  }
                 },
                 child: const Text('获取环境变量'),
             ),
@@ -212,19 +230,6 @@ class _MyHomePageState extends State<MyHomePage> {
             FilledButton(onPressed: () async {
               await MyCache.getSingleFile('https://watermark.lovepik.com/photo/20211119/large/lovepik-ten-thousand-mountains-tupian-picture_500348227.jpg');
             }, child: const Text('获取网络缓存')),
-
-            FilledButton(
-              onPressed: () async {
-                showCupertinoDialog(context: context,
-                  barrierDismissible: true,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text('Deep Link'),
-                      content: Text('Deep link test'),
-                    );
-                });
-              }, child: const Text('弹窗测试')
-            ),
 
             FilledButton(
                 onPressed: () async {
@@ -596,16 +601,21 @@ class _MyHomePageState extends State<MyHomePage> {
               }, child: const Text('dialog')
             ),
 
+
             MyCarousel(
               isAutoPlay: true,
               children: [
                 MyImage(imageUrl: 'https://media.istockphoto.com/id/1594228594/photo/close-up-image-of-a-young-creative-artists-hands-smeared-with-watercolors-holding-a-spatula.jpg?s=2048x2048&w=is&k=20&c=AmejOm5Kor9UQEI11Ouls6KRwTMP5ytV38jr__tA0Zs='),
                 MyImage(imageUrl: 'https://media.istockphoto.com/id/1594228594/photo/close-up-image-of-a-young-creative-artists-hands-smeared-with-watercolors-holding-a-spatula.jpg?s=2048x2048&w=is&k=20&c=AmejOm5Kor9UQEI11Ouls6KRwTMP5ytV38jr__tA0Zs='),
-                MyImage(imageUrl: 'https://media.istockphoto.com/id/1594228594/photo/close-up-image-of-a-young-creative-artists-hands-smeared-with-watercolors-holding-a-spatula.jpg?s=2048x2048&w=is&k=20&c=AmejOm5Kor9UQEI11Ouls6KRwTMP5ytV38jr__tA0Zs='),
+                MyImage(imageUrl: 'https://media.istockphoto.com/id/1594228594/photo/close-up-image-of-a-young-creative-artists-hands-smeared-with-watercolors-holding-a-spatula.jpg?s=2048x2048&w=is&k=20&c=AmejOm5Kor9UQEI11Ouls6KRwTMP5ytV38jr__'),
               ], onChanged: (index) {
-                MyLogger.w('$index');
+                // MyLogger.w('$index');
+                carouselIndex.value = index;
+                // MyLogger.w('$carouselIndex');
               },
             ),
+
+            Obx(() => MyCarouselBar(length: 40, index: carouselIndex.value),),
 
             MyMarquee(
               contents: [
@@ -614,6 +624,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 '啊烧豆腐看见阿拉斯加地方啊考六级啊了烧豆腐卷阿里斯顿肌肤啦睡觉地方阿斯顿六块腹肌阿拉斯加地方了啊是江东父老卡上地方了就',
               ],
             ),
+
+            FilledButton(
+                onPressed: () async {
+                  final navigate = Navigator.of(context);
+                  final path = await MyPicker.getVideo();
+                  if (path != null && navigate.mounted) {
+                    MyDialog.show(navigate.context,
+                      child: MyVideoPlayer(file: File(path.path),),
+                    );
+                  }
+                }, child: const Text('视频展示')
+            ),
+
+            Container(width: 100, height: 100, decoration: BoxDecoration(shape: BoxShape.circle), clipBehavior: Clip.antiAlias, child: MyImage(imageUrl: 'imageUrl', width: double.infinity, height: double.infinity,),),
           ],
         ),
       ),// This trailing comma makes auto-formatting nicer for build methods.
