@@ -9,6 +9,7 @@ class MyImage extends StatelessWidget {
     this.height,
     this.fit = BoxFit.cover,
     this.loadingWidget,
+    this.errorWidget,
     this.isAlive = true,
   });
 
@@ -17,6 +18,7 @@ class MyImage extends StatelessWidget {
   final double? height;
   final BoxFit? fit;
   final Widget? loadingWidget;
+  final Widget? errorWidget;
   final bool isAlive;
 
   @override
@@ -46,7 +48,7 @@ class MyImage extends StatelessWidget {
             }
           },
           errorBuilder: (context, error, stackTrace) {
-            return loadingWidget ?? brokenWidget;
+            return errorWidget ?? loadingWidget ?? brokenWidget;
           },
           frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
             if (frame == null) {

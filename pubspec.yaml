@@ -1,7 +1,7 @@
 name: cgwallet
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.1.1
+version: 1.1.4
 
 environment:
   sdk: ^3.5.3
@@ -49,6 +49,9 @@ dependencies:
   # 音频/音效
   audioplayers: ^6.1.0
 
+  # 热更新
+  shorebird_code_push: ^2.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -65,17 +68,15 @@ flutter:
     - assets/images/
     - assets/images/dark/
     - assets/images/light/
-
     - assets/svg/
     - assets/svg/dark/
     - assets/svg/light/
-
     - assets/lottie/
     - assets/lottie/dark/
     - assets/lottie/light/
-
     - assets/audios/
     - assets/common/
+    - shorebird.yaml
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -7,8 +7,8 @@ class MyIcons {
   MyColors get _myColors => MyColors();
 
   Icon get right => Icon(Icons.chevron_right, color: _myColors.iconGrey);
-  Icon get brokenImage => Icon(Icons.broken_image, size: 64, color: _myColors.onBackground.withOpacity(0.2));
-  Icon get done => const Icon(Icons.done, color: Colors.white, size: 16);
+  Icon get brokenImage => Icon(Icons.broken_image, size: 64, color: _myColors.textDefault);
+  Icon get done => Icon(Icons.done, color: _myColors.textDefault, size: 16);
   Icon get downSolid => Icon(Icons.arrow_drop_down, color: _myColors.textDefault);
   Icon get downSolidLight => Icon(Icons.arrow_drop_down, color: _myColors.onButtonPressed);
   Icon get upSolid => Icon(Icons.arrow_drop_up, color: _myColors.textDefault);
