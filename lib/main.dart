@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:my_utils/my_utils.dart';
 import 'package:my_widgets/my_widgets.dart';
+import 'package:restart_app/restart_app.dart';
 
 import 'common/common.dart';
 
@@ -84,7 +88,6 @@ class HomeScreen extends StatelessWidget {
           },
           child: Text('跟随系统'),
         ),
-        Text(Lang.activityClosed.tr),
         ElevatedButton(
           onPressed: () async {
             final myLocale = MyLangMode.fromString('zh');
@@ -107,11 +110,30 @@ class HomeScreen extends StatelessWidget {
           },
           child: Text('自动适配'),
         ),
+        ElevatedButton(
+          onPressed: () async {
+            if (Platform.isAndroid) {
+              SystemNavigator.pop();
+            } else if (Platform.isIOS) {
+              exit(0);
+            }
+          },
+          child: Text('退出APP'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            Restart.restartApp(
+              notificationTitle: '重新启动',
+              notificationBody: '点击这里重新启动APP',
+            );
+          },
+          child: Text('重新启动'),
+        ),
       ],
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Testing')),
+      appBar: AppBar(title: Text(Lang.activityClosed.tr)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: wrap
