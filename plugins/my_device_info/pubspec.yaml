@@ -16,10 +16,10 @@ dependencies:
   plugin_platform_interface: ^2.1.8
 
   # 包信息
-  package_info_plus: ^8.1.1
+  package_info_plus: ^8.1.2
 
   # 设备信息
-  device_info_plus: ^11.1.1
+  device_info_plus: ^11.2.0
 
 dev_dependencies:
   flutter_test:

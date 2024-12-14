@@ -1,8 +1,8 @@
-import 'package:cgwallet/common/lang/my_lang.dart';
-import 'package:cgwallet/common/theme/theme.dart';
+import 'package:cgwallet/common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_utils/utils/my_cache.dart';
+import 'package:restart_app/restart_app.dart';
 
 
 Future<void> initialized() async {
@@ -20,6 +20,7 @@ Future<void> initialized() async {
   });
 
   WidgetsBinding.instance.addPostFrameCallback((_) async {
+    // 初始化主题
     final themeModeCache = await MyCache.getFile('themeMode');
     final themeModeString = await themeModeCache?.readAsString();
 
@@ -30,6 +31,7 @@ Future<void> initialized() async {
       MyTheme.update(mode: MyThemeMode.system);
     }
 
+    // 初始化语言
     final localeCache = await MyCache.getFile('locale');
     final localeString = await localeCache?.readAsString();
 
@@ -40,5 +42,19 @@ Future<void> initialized() async {
       final mode = MyLangMode.fromLocale(Get.deviceLocale ?? MyLang.defaultMode);
       MyLang.update(mode: mode);
     }
+
+    // 初始化热更新
+    startCheckingForHotUpdates(() {
+      showMyDialog(
+        title: '发现新版本',
+        content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
+        onConfirm: () {
+          Restart.restartApp(
+            notificationTitle: '重新启动',
+            notificationBody: '点击这里重新启动APP',
+          );
+        }
+      );
+    });
   });
 }

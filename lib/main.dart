@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+
       // initialRoute: '/',
       title: '王富贵钱包',
       theme: ThemeData(
@@ -61,7 +62,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final wrap = Wrap(
       spacing: 10,
       crossAxisAlignment: WrapCrossAlignment.center,
@@ -127,7 +127,42 @@ class HomeScreen extends StatelessWidget {
               notificationBody: '点击这里重新启动APP',
             );
           },
-          child: Text('重新启动'),
+          child: Text('重新启动APP'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            final environment = await MyEnvironment.initialize();
+            switch (environment){
+              case Environment.test:
+                showMySnack(child: Text('当前环境：开发', style: TextStyle(color: Colors.white, fontSize: 13)));
+                break;
+              case Environment.pre:
+                showMySnack(child: Text('当前环境：预发', style: TextStyle(color: Colors.white, fontSize: 13)));
+                break;
+              case Environment.grey:
+                showMySnack(child: Text('当前环境：灰度', style: TextStyle(color: Colors.white, fontSize: 13)));
+                break;
+              default:
+                showMySnack(child: Text('当前环境：正式', style: TextStyle(color: Colors.white, fontSize: 13)));
+            }
+          },
+          child: Text('获取环境参数'),
+        ),
+
+        ElevatedButton(
+          onPressed: () async {
+          },
+          child: Text('配置DIO'),
+        ),
+
+        ElevatedButton(
+          onPressed: () async {
+            showMyDialog(
+                title: '测试啊的',
+                content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
+            );
+          },
+          child: Text('弹窗测试'),
         ),
       ],
     );

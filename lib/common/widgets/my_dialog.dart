@@ -1,35 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:my_widgets/my_widgets.dart';
 
-void showLoading() => MyAlert.showLoading();
-void hideLoading() => MyAlert.hideLoading();
-void showBlock() => MyAlert.showBlock();
-void hideBlock() => MyAlert.hideBlock();
-void showSnack({Widget? child}) => MyAlert.showSnack(child: child);
+void showMyLoading() => MyAlert.showLoading();
+void hideMyLoading() => MyAlert.hideLoading();
+void showMyBlock() => MyAlert.showBlock();
+void hideMyBlock() => MyAlert.hideBlock();
+void showMySnack({Widget? child}) => MyAlert.showSnack(child: child);
 
-Future<dynamic> showAlert(BuildContext context, {
+Future<dynamic> showMyDialog({
   String title = '',
-  TextStyle titleStyle = const TextStyle(fontSize: 18),
   String content = '',
-  TextStyle contentStyle = const TextStyle(fontSize: 13),
   bool isDismissible = true,
-  bool isModal = true,
-  Color backgroundColor = Colors.white,
+  Color? backgroundColor,
+  String confirmText = '',
+  String cancelText = '',
+  VoidCallback? onConfirm,
+  VoidCallback? onCancel,
 }) async {
+  final titleStyle = const TextStyle(fontSize: 16);
+  final contentStyle = const TextStyle(fontSize: 13);
+
   final titleBox = Text(title, style: titleStyle);
   final contentBox = Text(content, style: contentStyle);
 
-  final cancelButton = FilledButton(
-    child: Text('Cancel'),
+  final cancelButton = ElevatedButton(
+    child: Text(cancelText),
     onPressed: () {
-      Navigator.pop(context);
+      Get.back();
+      onCancel?.call();
     },
   );
 
-  final confirmButton = FilledButton(
+  final confirmButton = ElevatedButton(
     child: Text('OK'),
     onPressed: () async {
-      Navigator.pop(context, 'Dialog Result');
+      Get.back(result: 'Dialog Result');
+      onConfirm?.call();
     },
   );
 
@@ -37,19 +44,24 @@ Future<dynamic> showAlert(BuildContext context, {
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      if (title.isNotEmpty) titleBox,
-      if (title.isNotEmpty) SizedBox(height: 10),
-      if (content.isNotEmpty) contentBox,
-      if (content.isNotEmpty) SizedBox(height: 20),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          cancelButton,
-          SizedBox(width: 10),
-          confirmButton,
-        ],
-      ),
+      if (title.isNotEmpty)
+        titleBox,
+      if (content.isNotEmpty)
+        SizedBox(height: 10),
+      if (content.isNotEmpty)
+        contentBox,
+      if (onConfirm!= null || onCancel!= null)
+        SizedBox(height: 20),
+      if (onConfirm!= null || onCancel!= null)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (onCancel != null) cancelButton,
+            if (onCancel != null && onConfirm != null) SizedBox(width: 10),
+            if (onConfirm != null) confirmButton,
+          ],
+        ),
     ],
   );
 
@@ -58,10 +70,12 @@ Future<dynamic> showAlert(BuildContext context, {
     child: column,
   );
 
-  return MyDialog.show(context,
-    isDismissible: isDismissible,
-    radius: 20,
-    backgroundColor: backgroundColor,
-    child: child,
-  );
+  if (Get.context != null) {
+    return MyDialog.show(Get.context!,
+      isDismissible: isDismissible,
+      radius: 20,
+      backgroundColor: backgroundColor,
+      child: child,
+    );
+  }
 }

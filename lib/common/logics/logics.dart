@@ -1,3 +1,3 @@
 library;
 
-export 'restart.dart';
+export 'check_update.dart';
