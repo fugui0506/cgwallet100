@@ -20,8 +20,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-
-      // initialRoute: '/',
       title: '王富贵钱包',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -46,7 +44,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       translations: MyLang(),
       defaultTransition: Transition.rightToLeftWithFade,
-      // getPages: MyPages.getPages,
       popGesture: true,
       transitionDuration: const Duration(milliseconds: 500),
       builder: (context, child) => MyAlert(key: MyAlert.globalKey, child: child),
@@ -63,9 +60,9 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wrap = Wrap(
-      spacing: 10,
+      spacing: 8,
       crossAxisAlignment: WrapCrossAlignment.center,
-      runSpacing: 10,
+      runSpacing: 0,
       children: [
         ElevatedButton(
           onPressed: () async {
@@ -122,9 +119,21 @@ class HomeScreen extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () async {
-            Restart.restartApp(
-              notificationTitle: '重新启动',
-              notificationBody: '点击这里重新启动APP',
+            showMyDialog(
+              title: '重新启动',
+              content: '是否现在重新启动并更新？',
+              confirmText: '确认',
+              cancelText: '取消',
+              onConfirm: () {
+                Restart.restartApp(
+                  notificationTitle: '重新启动',
+                  notificationBody: '点击这里重新启动APP',
+                );
+              },
+              onCancel: () {
+                print('22');
+                Get.back();
+              },
             );
           },
           child: Text('重新启动APP'),
@@ -151,18 +160,46 @@ class HomeScreen extends StatelessWidget {
 
         ElevatedButton(
           onPressed: () async {
+            showMyDialog(
+              title: '测试啊的',
+              content: '测试弹窗的小题内容阿道夫阿拉斯加的弗拉索夫阿斯顿客服了解拉萨地方啦快结束的福利啊结束的福利就啊谁来对抗肌肤啊三闾大夫？',
+            );
           },
-          child: Text('配置DIO'),
+          child: Text('弹窗测试全无'),
         ),
 
         ElevatedButton(
           onPressed: () async {
             showMyDialog(
-                title: '测试啊的',
-                content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
+              title: '测试啊的',
+              content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
+              onConfirm: () {}
             );
           },
-          child: Text('弹窗测试'),
+          child: Text('弹窗测试有确认'),
+        ),
+
+        ElevatedButton(
+          onPressed: () async {
+            showMyDialog(
+              title: '测试啊的',
+              content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
+              onCancel: () {}
+            );
+          },
+          child: Text('弹窗测试有取消'),
+        ),
+
+        ElevatedButton(
+          onPressed: () async {
+            showMyDialog(
+              title: '测试啊的',
+              content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
+              onCancel: () {},
+              onConfirm: () {}
+            );
+          },
+          child: Text('弹窗测试都有'),
         ),
       ],
     );

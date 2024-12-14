@@ -8,34 +8,33 @@ void showMyBlock() => MyAlert.showBlock();
 void hideMyBlock() => MyAlert.hideBlock();
 void showMySnack({Widget? child}) => MyAlert.showSnack(child: child);
 
-Future<dynamic> showMyDialog({
-  String title = '',
-  String content = '',
+Future<void> showMyDialog({
+  String? title,
+  String? content,
   bool isDismissible = true,
   Color? backgroundColor,
-  String confirmText = '',
-  String cancelText = '',
+  String? confirmText,
+  String? cancelText,
   VoidCallback? onConfirm,
   VoidCallback? onCancel,
+  double? margin,
+  double? borderRadius,
 }) async {
   final titleStyle = const TextStyle(fontSize: 16);
   final contentStyle = const TextStyle(fontSize: 13);
 
-  final titleBox = Text(title, style: titleStyle);
-  final contentBox = Text(content, style: contentStyle);
-
   final cancelButton = ElevatedButton(
-    child: Text(cancelText),
+    child: Text(cancelText ?? '取消'),
     onPressed: () {
-      Get.back();
+      Get.backLegacy();
       onCancel?.call();
     },
   );
 
   final confirmButton = ElevatedButton(
-    child: Text('OK'),
+    child: Text(confirmText ?? '确认'),
     onPressed: () async {
-      Get.back(result: 'Dialog Result');
+      Get.backLegacy(result: 'Dialog Result');
       onConfirm?.call();
     },
   );
@@ -44,38 +43,56 @@ Future<dynamic> showMyDialog({
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      if (title.isNotEmpty)
-        titleBox,
-      if (content.isNotEmpty)
-        SizedBox(height: 10),
-      if (content.isNotEmpty)
-        contentBox,
-      if (onConfirm!= null || onCancel!= null)
-        SizedBox(height: 20),
-      if (onConfirm!= null || onCancel!= null)
+      if (title != null) Text(title, style: titleStyle),
+      if (content != null && title != null) SizedBox(height: 16),
+      if (content != null)  Text(content, style: contentStyle),
+      if ((title != null || content != null) && (confirmText != null || cancelText != null || onConfirm != null || onCancel != null)) SizedBox(height: 24),
+      if (confirmText != null || cancelText != null || onConfirm != null || onCancel != null)
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            if (onCancel != null) cancelButton,
-            if (onCancel != null && onConfirm != null) SizedBox(width: 10),
-            if (onConfirm != null) confirmButton,
+            if (cancelText != null || onCancel != null) cancelButton,
+            if ((cancelText != null || onCancel != null) && (confirmText != null || onConfirm != null)) SizedBox(width: 10),
+            if (confirmText != null || onConfirm != null) confirmButton,
           ],
         ),
     ],
   );
 
   final child = Container(
-    padding: const EdgeInsets.all(16),
+    padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
     child: column,
   );
 
-  if (Get.context != null) {
-    return MyDialog.show(Get.context!,
+  final result = await Get.generalDialog<dynamic>(
+    barrierDismissible: isDismissible,
+    barrierLabel: '',
+    transitionDuration: const Duration(milliseconds: 300),
+    pageBuilder: (context, animation, secondaryAnimation) {
+      return SafeArea(
+        child: Dialog(
+          insetPadding: margin == null ? const EdgeInsets.all(32) : EdgeInsets.all(margin),
+          backgroundColor: backgroundColor,
+          shape: RoundedRectangleBorder(borderRadius: borderRadius == null ? BorderRadius.circular(10) : BorderRadius.circular(borderRadius)),
+          child: child,
+        ),
+      );
+    },
+  );
+
+  if (isDismissible == false && result == null) {
+    showMyDialog(
+      title: title,
+      content: content,
       isDismissible: isDismissible,
-      radius: 20,
       backgroundColor: backgroundColor,
-      child: child,
+      confirmText: confirmText,
+      cancelText: cancelText,
+      onConfirm: onConfirm,
+      onCancel: onCancel,
+      margin: margin,
+      borderRadius: borderRadius,
     );
   }
 }
