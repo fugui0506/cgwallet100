@@ -61,7 +61,7 @@ Future<void> showMyDialog({
   );
 
   final child = Container(
-    padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+    padding: EdgeInsets.fromLTRB(24, 24, 24, (cancelText != null || onCancel != null) && (confirmText != null || onConfirm != null) ? 24 : 16),
     child: column,
   );
 
@@ -72,6 +72,7 @@ Future<void> showMyDialog({
     pageBuilder: (context, animation, secondaryAnimation) {
       return SafeArea(
         child: Dialog(
+          clipBehavior: Clip.antiAlias,
           insetPadding: margin == null ? const EdgeInsets.all(32) : EdgeInsets.all(margin),
           backgroundColor: backgroundColor,
           shape: RoundedRectangleBorder(borderRadius: borderRadius == null ? BorderRadius.circular(10) : BorderRadius.circular(borderRadius)),
