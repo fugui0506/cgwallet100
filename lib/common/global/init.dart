@@ -47,7 +47,10 @@ Future<void> initialized() async {
       showMyDialog(
         title: '发现新版本',
         content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
-        onConfirm: MyDeviceInfo.restartApp
+        onConfirm: () => MyDeviceInfo.restartApp(
+          notificationTitle: '重新启动APP',
+          notificationBody: '点击这里重新启动APP'
+        )
       );
     });
   });

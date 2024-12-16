@@ -102,7 +102,7 @@ class HomeScreen extends StatelessWidget {
           onPressed: () async {
             await MyCache.removeFile('locale');
           },
-          child: Text('自动适配'),
+          child: Text('自动适配语言'),
         ),
         ElevatedButton(
           onPressed: () async {
@@ -123,7 +123,10 @@ class HomeScreen extends StatelessWidget {
               confirmText: '确认',
               cancelText: '取消',
               onConfirm: () {
-                MyDeviceInfo.restartApp();
+                MyDeviceInfo.restartApp(
+                  notificationTitle: '测试用的',
+                  notificationBody: '点击这里重新启动APP',
+                );
               },
               onCancel: () {
                 Get.back();
@@ -157,107 +160,23 @@ class HomeScreen extends StatelessWidget {
             showMyDialog(
               title: '测试啊的',
               content: '测试弹窗的小题内容阿道夫阿拉斯加的弗拉索夫阿斯顿客服了解拉萨地方啦快结束的福利啊结束的福利就啊谁来对抗肌肤啊三闾大夫？',
-            );
-          },
-          child: Text('弹窗测试全无'),
-        ),
-
-        ElevatedButton(
-          onPressed: () async {
-            showMyDialog(
-              title: '测试啊的',
-              content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
-              onConfirm: () {}
-            );
-          },
-          child: Text('弹窗测试有确认'),
-        ),
-
-        ElevatedButton(
-          onPressed: () async {
-            showMyDialog(
-              title: '测试啊的',
-              content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
-              onCancel: () {}
-            );
-          },
-          child: Text('弹窗测试有取消'),
-        ),
-
-        ElevatedButton(
-          onPressed: () async {
-            showMyDialog(
-              title: '弹窗测试',
-              content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
+              onConfirm: () {},
               onCancel: () {},
-              onConfirm: () {}
             );
           },
-          child: Text('弹窗测试都有'),
+          child: Text('弹窗测试'),
         ),
 
         ElevatedButton(
           onPressed: () async {
             showMyDialog(
-                // title: '弹窗测试',
-                content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
-                onCancel: () {},
-                onConfirm: () {}
+              title: '测试啊的',
+              content: '测试弹窗的小题内容阿道夫阿拉斯加的弗拉索夫阿斯顿客服了解拉萨地方啦快结束的福利啊结束的福利就啊谁来对抗肌肤啊三闾大夫？',
+              onConfirm: () {},
+              onCancel: () {},
             );
           },
-          child: Text('无标题的弹窗'),
-        ),
-
-        ElevatedButton(
-          onPressed: () async {
-            showMyDialog(
-              title: '弹窗测试',
-              //   content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
-                onCancel: () {},
-                onConfirm: () {}
-            );
-          },
-          child: Text('无内容的弹窗'),
-        ),
-
-        ElevatedButton(
-          onPressed: () async {
-            showMyDialog(
-                // title: '弹窗测试',
-                //   content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
-                onCancel: () {},
-                onConfirm: () {}
-            );
-          },
-          child: Text('无标题和内容'),
-        ),
-
-        ElevatedButton(
-          onPressed: () async {
-
-          },
-          child: Text('新测试3333'),
-        ),
-
-        ElevatedButton(
-          onPressed: () async {
-
-          },
-          child: Text('新测试4444'),
-        ),
-
-        ElevatedButton(
-          onPressed: () async {
-            MyDeviceInfo.restartApp();
-          },
-          child: Text('新测试666'),
-        ),
-
-        ElevatedButton(
-          onPressed: () async {
-            MyDeviceInfo.restartApp();
-          },
-          child: Text('新测试777'),
+          child: Text('测试001'),
         ),
       ],
     );
