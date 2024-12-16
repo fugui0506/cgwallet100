@@ -143,7 +143,6 @@ class HomeScreen extends StatelessWidget {
                 );
               },
               onCancel: () {
-                print('22');
                 Get.back();
               },
             );

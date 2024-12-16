@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:cgwallet/common/widgets/my_dialog.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:my_widgets/my_widgets.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
 
 ShorebirdUpdater? _updater;
