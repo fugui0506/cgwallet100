@@ -1,7 +1,7 @@
 name: cgwallet
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 2.1.0
+version: 1.0.4
 
 environment:
   sdk: ^3.5.3
@@ -44,7 +44,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
 
   # lottie
-  lottie: ^3.3.0
+  lottie: ^3.2.0
 
   # 音频/音效
   audioplayers: ^6.1.0

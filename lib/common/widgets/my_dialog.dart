@@ -61,7 +61,7 @@ Future<void> showMyDialog({
   );
 
   final child = Container(
-    padding: EdgeInsets.fromLTRB(24, 24, 24, (cancelText != null || onCancel != null) && (confirmText != null || onConfirm != null) ? 24 : 16),
+    padding: EdgeInsets.fromLTRB(24, 24, 24, cancelText != null || onCancel != null || confirmText != null || onConfirm != null ? 16 : 28),
     child: column,
   );
 

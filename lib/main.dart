@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:my_device_info/my_device_info.dart';
 import 'package:my_utils/my_utils.dart';
 import 'package:my_widgets/my_widgets.dart';
 import 'package:restart_app/restart_app.dart';
@@ -109,6 +110,17 @@ class HomeScreen extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () async {
+            final info = await MyDeviceInfo.getDeviceInfo();
+            showMyDialog(
+              title: info.appName,
+              content: 'version: ${info.appVersion}, 其他信息：${info.brand}, ${info.id}, ${info.model}, ${info.systemVersion}',
+              confirmText: '关闭',
+            );
+          },
+          child: Text('版本检查'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
             if (Platform.isAndroid) {
               SystemNavigator.pop();
             } else if (Platform.isIOS) {
@@ -193,13 +205,49 @@ class HomeScreen extends StatelessWidget {
         ElevatedButton(
           onPressed: () async {
             showMyDialog(
-              title: '测试啊的',
+              title: '弹窗测试',
               content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
               onCancel: () {},
               onConfirm: () {}
             );
           },
           child: Text('弹窗测试都有'),
+        ),
+
+        ElevatedButton(
+          onPressed: () async {
+            showMyDialog(
+                // title: '弹窗测试',
+                content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
+                onCancel: () {},
+                onConfirm: () {}
+            );
+          },
+          child: Text('无标题的弹窗'),
+        ),
+
+        ElevatedButton(
+          onPressed: () async {
+            showMyDialog(
+              title: '弹窗测试',
+              //   content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
+                onCancel: () {},
+                onConfirm: () {}
+            );
+          },
+          child: Text('无内容的弹窗'),
+        ),
+
+        ElevatedButton(
+          onPressed: () async {
+            showMyDialog(
+                // title: '弹窗测试',
+                //   content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
+                onCancel: () {},
+                onConfirm: () {}
+            );
+          },
+          child: Text('无标题和内容'),
         ),
       ],
     );
