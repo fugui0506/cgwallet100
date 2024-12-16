@@ -43,4 +43,8 @@ class MyDeviceInfo {
     }
     return MyDeviceInfoModel.empty();
   }
+
+  static Future<void> restartApp({String? notificationTitle, String? notificationBody}) async {
+    return MyDeviceInfoPlatform.instance.restartApp(notificationBody: notificationTitle, notificationTitle: notificationTitle);
+  }
 }

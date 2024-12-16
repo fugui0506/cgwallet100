@@ -1,12 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:my_device_info/my_device_info.dart';
 import 'package:my_utils/my_utils.dart';
 import 'package:my_widgets/my_widgets.dart';
-import 'package:restart_app/restart_app.dart';
 
 import 'common/common.dart';
 
@@ -121,26 +117,13 @@ class HomeScreen extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () async {
-            if (Platform.isAndroid) {
-              SystemNavigator.pop();
-            } else if (Platform.isIOS) {
-              exit(0);
-            }
-          },
-          child: Text('退出APP'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
             showMyDialog(
               title: '重新启动',
               content: '是否现在重新启动并更新？',
               confirmText: '确认',
               cancelText: '取消',
               onConfirm: () {
-                Restart.restartApp(
-                  notificationTitle: '重新启动',
-                  notificationBody: '点击这里重新启动APP',
-                );
+                MyDeviceInfo.restartApp();
               },
               onCancel: () {
                 Get.back();
@@ -247,6 +230,34 @@ class HomeScreen extends StatelessWidget {
             );
           },
           child: Text('无标题和内容'),
+        ),
+
+        ElevatedButton(
+          onPressed: () async {
+
+          },
+          child: Text('新测试3333'),
+        ),
+
+        ElevatedButton(
+          onPressed: () async {
+
+          },
+          child: Text('新测试4444'),
+        ),
+
+        ElevatedButton(
+          onPressed: () async {
+            MyDeviceInfo.restartApp();
+          },
+          child: Text('新测试666'),
+        ),
+
+        ElevatedButton(
+          onPressed: () async {
+            MyDeviceInfo.restartApp();
+          },
+          child: Text('新测试777'),
         ),
       ],
     );

@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:restart_app/restart_app.dart';
 
 import 'models/my_device_info_model.dart';
 import 'my_device_info_platform_interface.dart';
@@ -20,5 +22,17 @@ class MethodChannelMyDeviceInfo extends MyDeviceInfoPlatform {
     final json = jsonDecode(jsonStr);
     final MyDeviceInfoModel myDeviceInfo = MyDeviceInfoModel.fromJson(json);
     return myDeviceInfo;
+  }
+
+  @override
+  Future<void> restartApp({String? notificationTitle, String? notificationBody}) async {
+    if (kIsWeb || Platform.isIOS) {
+      await Restart.restartApp(
+        notificationTitle: notificationTitle,
+        notificationBody: notificationBody,
+      );
+    } else if (Platform.isAndroid) {
+      return methodChannel.invokeMethod('restart');
+    }
   }
 }

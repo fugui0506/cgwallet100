@@ -27,4 +27,8 @@ abstract class MyDeviceInfoPlatform extends PlatformInterface {
   Future<MyDeviceInfoModel> getDeviceInfo() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  Future<void> restartApp({String? notificationTitle, String? notificationBody}) {
+    throw UnimplementedError('platformVersion() has not been implemented.');
+  }
 }

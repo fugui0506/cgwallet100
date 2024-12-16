@@ -1,9 +1,8 @@
 import 'package:cgwallet/common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_device_info/my_device_info.dart';
 import 'package:my_utils/utils/my_cache.dart';
-import 'package:restart_app/restart_app.dart';
-
 
 Future<void> initialized() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,12 +47,7 @@ Future<void> initialized() async {
       showMyDialog(
         title: '发现新版本',
         content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
-        onConfirm: () {
-          Restart.restartApp(
-            notificationTitle: '重新启动',
-            notificationBody: '点击这里重新启动APP',
-          );
-        }
+        onConfirm: MyDeviceInfo.restartApp
       );
     });
   });

@@ -769,7 +769,7 @@ packages:
     source: hosted
     version: "2.0.0"
   restart_app:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: restart_app
       sha256: "00d5ec3e9de871cedbe552fc41e615b042b5ec654385e090e0983f6d02f655ed"
