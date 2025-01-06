@@ -9,10 +9,6 @@ Timer? _timer;
 void startCheckingForHotUpdates(void Function() onUpdate) {
   _timer?.cancel();
   _timer = Timer.periodic(const Duration(minutes: 1), (timer) async {
-    // log('正在检查热更新...');
-    // showMySnack(
-    //   child: Text('正在检查热更新...', style: TextStyle(fontSize: 13, color: Colors.white))
-    // );
     _updater ??= ShorebirdUpdater();
     final status = await _updater!.checkForUpdate();
     if (status == UpdateStatus.outdated) {

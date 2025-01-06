@@ -15,9 +15,7 @@ class MyWss {
     this.timeoutSeconds = 2,
     this.onMaxRetryOut,
     this.onMessageReceived,
-  }) {
-    connect();
-  }
+  });
 
   // 传参
   final List<String> urls;

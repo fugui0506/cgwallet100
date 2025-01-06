@@ -3,32 +3,30 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 
 class MyDio {
-  static final MyDio _instance = MyDio._internal();
-  factory MyDio() => _instance;
-  MyDio._internal();
-
   CancelToken cancelTokenPublic = CancelToken();
   Dio? _dio;
 
   bool get isInitialized => _dio != null;
 
-  static MyDio initialize({
-    BaseOptions Function(BaseOptions options)? baseOptions,
-    Map<String, dynamic>? headers,
-    Future<void> Function(Response<dynamic> response)? onResponse,
-  }) {
-    if (_instance.isInitialized) {
-      log("⚠️ MyDio 已经初始化过...");
-      return _instance;
+  Dio get dio {
+    if (!isInitialized) {
+      throw StateError("❌ MyDio 未初始化，请先调用 MyDio.initialize()");
     }
-    return _instance._initialize(baseOptions: baseOptions, headers: headers, onResponse: onResponse);
+    return _dio!;
   }
 
-  MyDio _initialize({
+  int myDioCode = 0;
+
+  void initialize({
     BaseOptions Function(BaseOptions options)? baseOptions,
     Map<String, dynamic>? headers,
     Future<void> Function(Response<dynamic> response)? onResponse,
+    int dioCode = 0,
   }) {
+    if (isInitialized) {
+      log("⚠️ MyDio 已经初始化过...");
+      return;
+    }
     final options = baseOptions?.call(BaseOptions());
     _dio = Dio(options ?? BaseOptions());
     _dio!.interceptors.add(InterceptorsWrapper(
@@ -46,14 +44,7 @@ class MyDio {
         return handler.reject(err);
       },
     ));
-    return this;
-  }
-
-  Dio get dio {
-    if (!isInitialized) {
-      throw StateError("❌ MyDio 未初始化，请先调用 MyDio.initialize()");
-    }
-    return _dio!;
+    myDioCode = dioCode;
   }
 
   void cancel() {
@@ -69,6 +60,7 @@ class MyDio {
   void _logError(DioException err) {
     String headers = const JsonEncoder.withIndent('  ').convert(err.requestOptions.headers);
     String data = const JsonEncoder.withIndent('  ').convert(err.requestOptions.data ?? err.requestOptions.queryParameters);
+
     log("❌" * 80);
     log("❌ 请求地址 => ${err.requestOptions.uri}");
     log("❌ 请求方式 => ${err.requestOptions.method}");
@@ -95,11 +87,12 @@ class MyDio {
 
   Future<void> get<T>({
     String path = '',
-    Function(dynamic)? onSuccess,
+    Function(int, String, T)? onSuccess,
     Map<String, dynamic>? data,
     CancelToken? cancelToken,
     void Function(int, int)? onReceiveProgress,
     void Function(DioException)? onError,
+    T Function(dynamic)? onModel,
   }) async {
     try {
       final response = await dio.get(path,
@@ -107,7 +100,20 @@ class MyDio {
         cancelToken: cancelToken ?? cancelTokenPublic,
         onReceiveProgress: onReceiveProgress,
       );
-      onSuccess?.call(response.data);
+      final responseModel = ResponseModel.fromJson(response.data);
+
+      if (responseModel.code == myDioCode) {
+        final model = onModel != null ? onModel(responseModel.data) : responseModel.data as T;
+        onSuccess?.call(responseModel.code, responseModel.msg, model);
+      } else {
+        final err = DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          error: responseModel.msg,
+          type: DioExceptionType.badResponse,
+        );
+        onError?.call(err);
+      }
     } on DioException catch (err) {
       onError?.call(err);
     }
@@ -115,17 +121,31 @@ class MyDio {
 
   Future<void> post<T>({
     String path = '',
-    Function(dynamic data)? onSuccess,
+    Function(int, String, T)? onSuccess,
     Map<String, dynamic>? data,
     CancelToken? cancelToken,
-    void Function(DioException err)? onError,
+    void Function(DioException)? onError,
+    T Function(dynamic)? onModel,
   }) async {
     try {
       final response = await dio.post(path,
         data: data,
         cancelToken: cancelToken ?? cancelTokenPublic,
       );
-      onSuccess?.call(response.data);
+      final responseModel = ResponseModel.fromJson(response.data);
+
+      if (responseModel.code == myDioCode) {
+        final model = onModel != null ? onModel(responseModel.data) : responseModel.data as T;
+        onSuccess?.call(responseModel.code, responseModel.msg, model);
+      } else {
+        final err = DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          error: responseModel.msg,
+          type: DioExceptionType.badResponse,
+        );
+        onError?.call(err);
+      }
     } on DioException catch (err) {
       onError?.call(err);
     }
@@ -133,11 +153,12 @@ class MyDio {
 
   Future<void> upload<T>({
     String path = '',
-    Function(dynamic)? onSuccess,
+    Function(int, String, T)? onSuccess,
     Map<String, dynamic>? data,
     CancelToken? cancelToken,
     void Function(int, int)? onSendProgress,
-    void Function(DioException err)? onError,
+    void Function(DioException)? onError,
+    T Function(dynamic)? onModel,
   }) async {
     try {
       final response = await dio.post(path,
@@ -146,9 +167,52 @@ class MyDio {
         options: Options(contentType: 'multipart/form-data'),
         onSendProgress: onSendProgress,
       );
-      onSuccess?.call(response.data);
+      final responseModel = ResponseModel.fromJson(response.data);
+
+      if (responseModel.code == myDioCode) {
+        final model = onModel != null ? onModel(responseModel.data) : responseModel.data as T;
+        onSuccess?.call(responseModel.code, responseModel.msg, model);
+      } else {
+        final err = DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          error: responseModel.msg,
+          type: DioExceptionType.badResponse,
+        );
+        onError?.call(err);
+      }
     } on DioException catch (err) {
       onError?.call(err);
     }
   }
+}
+
+class ResponseModel {
+  int code;
+  dynamic data;
+  String msg;
+
+  ResponseModel({
+    required this.code,
+    required this.data,
+    required this.msg,
+  });
+
+  factory ResponseModel.fromJson(Map<String, dynamic> json) => ResponseModel(
+    code: json["code"] ?? -1,
+    data: json["data"] ?? {},
+    msg: json["msg"] ?? '',
+  );
+
+  factory ResponseModel.empty() => ResponseModel(
+    code: -1,
+    data: {},
+    msg: '',
+  );
+
+  Map<String, dynamic> toJson() => {
+    "code": code,
+    "data": data,
+    "msg": msg,
+  };
 }
