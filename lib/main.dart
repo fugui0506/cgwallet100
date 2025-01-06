@@ -1,3 +1,6 @@
+import 'package:cgwallet/common/logics/get_options.dart';
+import 'package:cgwallet/common/logics/set_my_wss.dart';
+import 'package:cgwallet/common/models/captcha_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_device_info/my_device_info.dart';
@@ -139,44 +142,74 @@ class HomeScreen extends StatelessWidget {
           onPressed: () async {
             final environment = await MyEnvironment.initialize();
             switch (environment){
-              case Environment.test:
-                showMySnack(child: Text('当前环境：开发', style: TextStyle(color: Colors.white, fontSize: 13)));
+              case Environment.rel:
+                showMySnack(child: Text('当前环境：正式', style: TextStyle(color: Colors.white, fontSize: 13)));
+                showMyLoading();
+                await getOptions(urls: MyConfig.urls.relUrls);
+                hideMyLoading();
                 break;
               case Environment.pre:
-                showMySnack(child: Text('当前环境：预发', style: TextStyle(color: Colors.white, fontSize: 13)));
+                showMyLoading();
+                await getOptions(urls: MyConfig.urls.preUrls);
+                hideMyLoading();
                 break;
               case Environment.grey:
-                showMySnack(child: Text('当前环境：灰度', style: TextStyle(color: Colors.white, fontSize: 13)));
+                showMyLoading();
+                await getOptions(urls: MyConfig.urls.greyUrls);
+                hideMyLoading();
                 break;
               default:
-                showMySnack(child: Text('当前环境：正式', style: TextStyle(color: Colors.white, fontSize: 13)));
+                showMyLoading();
+                await getOptions(urls: MyConfig.urls.testUrls);
+                hideMyLoading();
+                break;
             }
           },
-          child: Text('获取环境参数'),
+          child: Text('获取配置'),
         ),
 
         ElevatedButton(
           onPressed: () async {
-            showMyDialog(
-              title: '测试啊的',
-              content: '测试弹窗的小题内容阿道夫阿拉斯加的弗拉索夫阿斯顿客服了解拉萨地方啦快结束的福利啊结束的福利就啊谁来对抗肌肤啊三闾大夫？',
-              onConfirm: () {},
-              onCancel: () {},
+            showMyLoading();
+            await getBaseUrl(
+              urls: UserController.to.baseUrlList,
+              onSuccess: (baseUrl) async {
+
+                UserController.to.myDio = await setMyDio(baseUrl: baseUrl);
+              },
+              onError: () {
+                print('获取baseUrl失败');
+              }
             );
+            hideMyLoading();
           },
-          child: Text('弹窗测试'),
+          child: Text('API线路'),
         ),
 
         ElevatedButton(
           onPressed: () async {
+            CaptchaModel data = CaptchaModel.empty();
+            showMyLoading();
+            await data.update();
+            hideMyLoading();
+            MyLogger.w('${data.toJson()}');
             showMyDialog(
-              title: '测试啊的',
-              content: '测试弹窗的小题内容阿道夫阿拉斯加的弗拉索夫阿斯顿客服了解拉萨地方啦快结束的福利啊结束的福利就啊谁来对抗肌肤啊三闾大夫？',
+              title: '返回数据',
+              content: '${data.toJson()}',
               onConfirm: () {},
               onCancel: () {},
             );
           },
-          child: Text('测试001'),
+          child: Text('测试接口'),
+        ),
+
+        ElevatedButton(
+          onPressed: () async {
+            UserController.to.userToken = '12313';
+            UserController.to.myWss = setMyWss();
+            UserController.to.myWss?.connect();
+          },
+          child: Text('连接ws'),
         ),
       ],
     );

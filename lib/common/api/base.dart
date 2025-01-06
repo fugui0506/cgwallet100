@@ -31,4 +31,6 @@ class _Base {
   final String setTransPassword = '/base/setTransPassword';
   // 验证token是否有效
   final String checkToken = '/base/checkToken';
+  // 获取人机验证key
+  final String getCaptchaKey = '/base/choice';
 }

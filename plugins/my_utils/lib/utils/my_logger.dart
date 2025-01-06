@@ -7,20 +7,21 @@ class MyLogger {
   MyLogger._internal();
 
   static void w(String text) => _instance._w(text);
-  static void l(String text) => _instance._l(text);
+  static void l() => _instance._l();
 
   final _taskQueue = Queue<Future<void> Function()>();
   bool _isExecuting = false;
 
-  void _l(String text) {
+  void _l() {
     _addTask(() async {
       log("-" * 120);
     });
   }
 
   void _w(String text) {
+    final timestamp = DateTime.now().toIso8601String();
     _addTask(() async {
-      log(text);
+      log('[$timestamp] $text');
     });
   }
 
@@ -40,6 +41,11 @@ class MyLogger {
     _isExecuting = true;
     final task = _taskQueue.removeFirst();
     await task();
-    _nextTask();
+    if (_taskQueue.isNotEmpty) {
+      await Future.delayed(Duration(milliseconds: 10));
+      _nextTask();
+    } else {
+      _isExecuting = false;
+    }
   }
 }

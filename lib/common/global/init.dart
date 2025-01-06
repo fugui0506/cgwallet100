@@ -54,4 +54,8 @@ Future<void> initialized() async {
       );
     });
   });
+
+  // 导入用户控制器
+  // user: 用户控制器
+  await Get.put(UserController()).initComplete;
 }

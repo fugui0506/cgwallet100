@@ -3,35 +3,27 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 
 class MyDio {
-  CancelToken cancelTokenPublic = CancelToken();
-  Dio? _dio;
-
-  bool get isInitialized => _dio != null;
-
-  Dio get dio {
-    if (!isInitialized) {
-      throw StateError("❌ MyDio 未初始化，请先调用 MyDio.initialize()");
-    }
-    return _dio!;
-  }
-
-  int myDioCode = 0;
-
-  void initialize({
-    BaseOptions Function(BaseOptions options)? baseOptions,
-    Map<String, dynamic>? headers,
-    Future<void> Function(Response<dynamic> response)? onResponse,
-    int dioCode = 0,
+  MyDio({
+    this.baseOptions,
+    this.headers,
+    this.onResponse,
+    this.dioCode = 0,
   }) {
     if (isInitialized) {
       log("⚠️ MyDio 已经初始化过...");
       return;
     }
-    final options = baseOptions?.call(BaseOptions());
-    _dio = Dio(options ?? BaseOptions());
+    final options = baseOptions?.call(BaseOptions(
+      responseType: ResponseType.json,
+      contentType: 'application/json; charset=utf-8',
+    ));
+    dioOptions = options;
+    _dio = Dio(options);
     _dio!.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
-        options.headers.addAll(headers ?? {});
+        if (headers != null) {
+          options.headers.addAll(headers!);
+        }
         return handler.next(options);
       },
       onResponse: (response, handler) async {
@@ -46,6 +38,28 @@ class MyDio {
     ));
     myDioCode = dioCode;
   }
+
+  final BaseOptions Function(BaseOptions options)? baseOptions;
+  final Map<String, dynamic>? headers;
+  final Future<void> Function(Response<dynamic> response)? onResponse;
+  final int dioCode;
+
+  BaseOptions? dioOptions;
+  Map<String, dynamic>? dioHeaders;
+
+  CancelToken cancelTokenPublic = CancelToken();
+  Dio? _dio;
+
+  bool get isInitialized => _dio != null;
+
+  Dio get dio {
+    if (!isInitialized) {
+      throw StateError("❌ MyDio 未初始化，请先调用 MyDio.initialize()");
+    }
+    return _dio!;
+  }
+
+  int myDioCode = 0;
 
   void cancel() {
     cancelTokenPublic.cancel();
@@ -85,8 +99,7 @@ class MyDio {
     log("✅" * 80);
   }
 
-  Future<void> get<T>({
-    String path = '',
+  Future<void> get<T>(String path, {
     Function(int, String, T)? onSuccess,
     Map<String, dynamic>? data,
     CancelToken? cancelToken,
@@ -119,8 +132,7 @@ class MyDio {
     }
   }
 
-  Future<void> post<T>({
-    String path = '',
+  Future<void> post<T>(String path, {
     Function(int, String, T)? onSuccess,
     Map<String, dynamic>? data,
     CancelToken? cancelToken,
@@ -151,20 +163,25 @@ class MyDio {
     }
   }
 
-  Future<void> upload<T>({
-    String path = '',
+  Future<void> upload<T>(String path, {
     Function(int, String, T)? onSuccess,
     Map<String, dynamic>? data,
     CancelToken? cancelToken,
     void Function(int, int)? onSendProgress,
     void Function(DioException)? onError,
     T Function(dynamic)? onModel,
+    Duration? sendTimeout,
+    Duration? receiveTimeout,
   }) async {
     try {
       final response = await dio.post(path,
         data: data == null ? null : FormData.fromMap(data),
         cancelToken: cancelToken ?? cancelTokenPublic,
-        options: Options(contentType: 'multipart/form-data'),
+        options: Options(
+          contentType: 'multipart/form-data',
+          sendTimeout: sendTimeout,
+          receiveTimeout: receiveTimeout,
+        ),
         onSendProgress: onSendProgress,
       );
       final responseModel = ResponseModel.fromJson(response.data);

@@ -45,8 +45,8 @@ Future<void> showMyDialog({
     children: [
       if (title != null) Text(title, style: titleStyle),
       if (content != null && title != null) SizedBox(height: 16),
-      if (content != null)  Text(content, style: contentStyle),
-      if ((title != null || content != null) && (confirmText != null || cancelText != null || onConfirm != null || onCancel != null)) SizedBox(height: 24),
+      if (content != null)  Flexible(child: SingleChildScrollView(scrollDirection: Axis. vertical, child: Text(content, style: contentStyle))),
+      if ((title != null || content != null) && (confirmText != null || cancelText != null || onConfirm != null || onCancel != null)) SizedBox(height: 16),
       if (confirmText != null || cancelText != null || onConfirm != null || onCancel != null)
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
