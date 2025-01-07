@@ -80,7 +80,7 @@ class MyWss {
       return;
     }
 
-    if (urls[_index].isEmpty) {
+    if (urls.isEmpty || urls[_index].isEmpty) {
       log("⚠️ wss 链接为空，无法链接... ⚠️");
       return;
     }

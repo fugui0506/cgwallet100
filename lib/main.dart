@@ -1,4 +1,3 @@
-import 'package:cgwallet/common/logics/get_options.dart';
 import 'package:cgwallet/common/logics/set_my_wss.dart';
 import 'package:cgwallet/common/models/captcha_model.dart';
 import 'package:flutter/material.dart';
@@ -173,17 +172,16 @@ class HomeScreen extends StatelessWidget {
             showMyLoading();
             await getBaseUrl(
               urls: UserController.to.baseUrlList,
-              onSuccess: (baseUrl) async {
-
-                UserController.to.myDio = await setMyDio(baseUrl: baseUrl);
+              onSuccess: (baseUrl) {
+                setMyDio(baseUrl: baseUrl);
               },
               onError: () {
-                print('获取baseUrl失败');
+                // print('获取baseUrl失败');
               }
             );
             hideMyLoading();
           },
-          child: Text('API线路'),
+          child: Text('配置dio'),
         ),
 
         ElevatedButton(
@@ -204,12 +202,11 @@ class HomeScreen extends StatelessWidget {
         ),
 
         ElevatedButton(
-          onPressed: () async {
-            UserController.to.userToken = '12313';
-            UserController.to.myWss = setMyWss();
+          onPressed: () {
+            setMyWss();
             UserController.to.myWss?.connect();
           },
-          child: Text('连接ws'),
+          child: Text('配置wss'),
         ),
       ],
     );

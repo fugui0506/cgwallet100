@@ -2,12 +2,12 @@ import 'package:cgwallet/common/common.dart';
 import 'package:my_device_info/my_device_info.dart';
 import 'package:my_utils/my_utils.dart';
 
-Future<MyDio> setMyDio({
+Future<void> setMyDio({
   required String baseUrl,
 }) async {
   final info = await MyDeviceInfo.getDeviceInfo();
   String device = '${info.brand}, ${info.id}, ${info.model}, ${info.systemVersion}';
-  return MyDio(
+  UserController.to.myDio = MyDio(
     baseOptions: (option) => option.copyWith(
       baseUrl: baseUrl,
       connectTimeout: MyConfig.time.outDefault,

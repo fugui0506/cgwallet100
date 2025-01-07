@@ -11,10 +11,9 @@ Future<void> getBaseUrl({
 }) async {
 
   final client = HttpClient();
-  final completer = Completer();
+  final completer = Completer<String>();
   final tasks = <Future>[];
 
-  String baseUrl = '';
 
   for (var url in urls) {
     tasks.add(Future(() async {
@@ -25,8 +24,7 @@ Future<void> getBaseUrl({
 
         if (response.statusCode >= 200 && response.statusCode < 300) {
           if (!completer.isCompleted) {
-            baseUrl = url;
-            completer.complete();
+            completer.complete(url);
           }
         } else {
           MyLogger.w('$url 健康检测失败 --> HTTP 状态码: ${response.statusCode}');
@@ -37,8 +35,10 @@ Future<void> getBaseUrl({
     }));
   }
 
+  String baseUrl = '';
+
   try {
-    await completer.future.timeout(MyConfig.time.outCheck);
+    baseUrl = await completer.future.timeout(MyConfig.time.outCheck);
   } catch (e) {
     MyLogger.w('健康检测超时或发生其他错误 --> $e');
   }
