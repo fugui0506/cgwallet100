@@ -187,7 +187,7 @@ class MyWss {
       if (_isConnected) {
         try {
           send(heartbeatMessage);
-          log('💓 心跳包发送成功: $heartbeatMessage');
+          log('💓 心跳包发送成功');
         } catch (e) {
           log('💔 心跳包发送失败: $e');
         }
