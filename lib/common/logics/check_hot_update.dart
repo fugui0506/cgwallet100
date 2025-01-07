@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'dart:developer';
 
+import 'package:cgwallet/common/common.dart';
+import 'package:my_device_info/my_device_info.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
 
 ShorebirdUpdater? _updater;
@@ -13,8 +14,14 @@ void startCheckingForHotUpdates(void Function() onUpdate) {
     final status = await _updater!.checkForUpdate();
     if (status == UpdateStatus.outdated) {
       await _updater!.update();
-      log('已检查到新版本...');
-      onUpdate.call();
+      showMyDialog(
+        title: '发现新版本',
+        content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
+        onConfirm: () => MyDeviceInfo.restartApp(
+          notificationTitle: '重新启动APP',
+          notificationBody: '点击这里重新启动APP'
+        )
+      );
     }
   });
 }

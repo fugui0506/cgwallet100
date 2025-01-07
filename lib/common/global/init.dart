@@ -1,61 +1,40 @@
 import 'package:cgwallet/common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_device_info/my_device_info.dart';
-import 'package:my_utils/utils/my_cache.dart';
+import 'package:my_utils/my_utils.dart';
 
 Future<void> initialized() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // 增加系统主题和系统语言监听器
+  // 监听系统主题变化
   SystemThemeObserver.init(isCanChange: () async {
     final themeModeCache = await MyCache.getFile('themeMode');
     return themeModeCache == null ? true : false;
   });
 
+  // 监听系统语言变化
   SystemLocaleObserver.init(getLangMode: () async {
     final localeCache = await MyCache.getFile('locale');
     final langMode = await localeCache?.readAsString();
     return langMode == null ? null : MyLangMode.fromString(langMode);
   });
 
-  WidgetsBinding.instance.addPostFrameCallback((_) async {
+  // 应用初始化
+  WidgetsBinding.instance.addPostFrameCallback((duration) {
+    MyLogger.w('初始化时长 -> $duration');
     // 初始化主题
-    final themeModeCache = await MyCache.getFile('themeMode');
-    final themeModeString = await themeModeCache?.readAsString();
-
-    if (themeModeString != null) {
-      final themeMode = MyThemeMode.from(themeModeString);
-      MyTheme.update(mode: themeMode);
-    } else {
-      MyTheme.update(mode: MyThemeMode.system);
-    }
-
+    initTheme();
     // 初始化语言
-    final localeCache = await MyCache.getFile('locale');
-    final localeString = await localeCache?.readAsString();
-
-    if (localeString != null) {
-      final mode = MyLangMode.fromString(localeString);
-      MyLang.update(mode: mode);
-    } else {
-      final mode = MyLangMode.fromLocale(Get.deviceLocale ?? MyLang.defaultMode);
-      MyLang.update(mode: mode);
-    }
-
-    // 初始化热更新
-    startCheckingForHotUpdates(() {
-      showMyDialog(
-        title: '发现新版本',
-        content: '需要重新启动APP以应用更新，是否现在重新启动并更新？',
-        onConfirm: () => MyDeviceInfo.restartApp(
-          notificationTitle: '重新启动APP',
-          notificationBody: '点击这里重新启动APP'
-        )
-      );
-    });
+    initLang();
+    // 初始化深度链接
+    initDeepLink();
+    // startCheckHotUpdate();
   });
 
   // 导入用户控制器
-  // user: 用户控制器
   await Get.put(UserController()).initComplete;
 }
+
+
+

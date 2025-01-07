@@ -7,7 +7,7 @@ class MyStyles {
 
   MyColors get _myColors => MyColors();
 
-  TextStyle get inputHint => TextStyle(color: MyColors().inputHint, fontSize: 14);
+  TextStyle get inputHint => TextStyle(color: _myColors.inputHint, fontSize: 14);
   TextStyle get inputText => TextStyle(color: _myColors.inputText, fontSize: 14);
   TextStyle get inputError => TextStyle(color: _myColors.error, fontSize: 14);
   TextStyle get inputBankTitle => TextStyle(color: _myColors.inputText, fontSize: 14);

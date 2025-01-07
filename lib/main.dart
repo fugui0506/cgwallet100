@@ -3,6 +3,7 @@ import 'package:cgwallet/common/models/captcha_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_device_info/my_device_info.dart';
+import 'package:my_gallery/my_gallery.dart';
 import 'package:my_utils/my_utils.dart';
 import 'package:my_widgets/my_widgets.dart';
 
@@ -207,6 +208,28 @@ class HomeScreen extends StatelessWidget {
             UserController.to.myWss?.connect();
           },
           child: Text('配置wss'),
+        ),
+
+        ElevatedButton(
+          onPressed: () async {
+            Get.to(()=> MyGallery.scan(onResult: (result) {
+              MyAudio.play(MyAudioPath.scan);
+              Get.back();
+              print('result: $result');
+            }));
+          },
+          child: Text('扫一扫'),
+        ),
+
+        ElevatedButton(
+          onPressed: () async {
+            final image = await MyPicker.getImage();
+            if (image!= null) {
+              final result = await MyGallery.decodeQRCode(path: image.path);
+              print(result);
+            }
+          },
+          child: Text('识别二维码'),
         ),
       ],
     );
