@@ -1,4 +1,5 @@
 import 'package:cgwallet/common/logics/set_my_wss.dart';
+import 'package:cgwallet/common/logics/set_theme.dart';
 import 'package:cgwallet/common/models/captcha_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -64,59 +65,23 @@ class HomeScreen extends StatelessWidget {
       crossAxisAlignment: WrapCrossAlignment.center,
       runSpacing: 0,
       children: [
-        ElevatedButton(
-          onPressed: () async {
-            await MyTheme.update(mode: MyThemeMode.light);
-            await MyCache.putFile('themeMode', MyThemeMode.light.toString());
-          },
-          child: Text('亮色主题'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            await MyTheme.update(mode: MyThemeMode.dark);
-            await MyCache.putFile('themeMode', MyThemeMode.dark.toString());
-          },
-          child: Text('暗色主题'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            await MyTheme.update(mode: MyThemeMode.system);
-            await MyCache.removeFile('themeMode');
-          },
-          child: Text('跟随系统'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            final myLocale = MyLangMode.fromString('zh');
-            await MyLang.update(mode: myLocale);
-            await MyCache.putFile('locale', myLocale.toString());
-          },
-          child: Text('中文'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            final myLocale = MyLangMode.fromString('en');
-            await MyLang.update(mode: myLocale);
-            await MyCache.putFile('locale', myLocale.toString());
-          },
-          child: Text('英文'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            await MyCache.removeFile('locale');
-          },
-          child: Text('自动适配语言'),
-        ),
+        ElevatedButton(onPressed: setThemeLight, child: Text('亮色主题')),
+        ElevatedButton(onPressed: setThemeDark, child: Text('暗色主题')),
+        ElevatedButton(onPressed: setThemeSystem, child: Text('跟随系统')),
+        ElevatedButton(onPressed: setLangZh, child: Text('中文')),
+        ElevatedButton(onPressed: setLangEn, child: Text('英文')),
+        ElevatedButton(onPressed: setLangSystem, child: Text('系统语言')),
+
         ElevatedButton(
           onPressed: () async {
             final info = await MyDeviceInfo.getDeviceInfo();
             showMyDialog(
               title: info.appName,
-              content: 'version: ${info.appVersion}, 其他信息：${info.brand}, ${info.id}, ${info.model}, ${info.systemVersion}',
+              content: 'APP 版本: ${info.appVersion}, 其他信息：${info.brand}, ${info.id}, ${info.model}, ${info.systemVersion}',
               confirmText: '关闭',
             );
           },
-          child: Text('版本检查'),
+          child: Text('本机信息'),
         ),
         ElevatedButton(
           onPressed: () async {
@@ -136,44 +101,10 @@ class HomeScreen extends StatelessWidget {
               },
             );
           },
-          child: Text('重新启动APP'),
+          child: Text('重启'),
         ),
-        ElevatedButton(
-          onPressed: () async {
-            final environment = await MyEnvironment.initialize();
-            switch (environment){
-              case Environment.rel:
-                showMySnack(child: Text('当前环境：正式', style: TextStyle(color: Colors.white, fontSize: 13)));
-                showMyLoading();
-                await getOptions(urls: MyConfig.urls.relUrls);
-                hideMyLoading();
-                break;
-              case Environment.pre:
-                showMyLoading();
-                await getOptions(urls: MyConfig.urls.preUrls);
-                hideMyLoading();
-                break;
-              case Environment.grey:
-                showMyLoading();
-                await getOptions(urls: MyConfig.urls.greyUrls);
-                hideMyLoading();
-                break;
-              default:
-                showMyLoading();
-                await getOptions(urls: MyConfig.urls.testUrls);
-                hideMyLoading();
-                break;
-            }
 
-            showMyDialog(
-              title: '返回数据',
-              content: 'wssUrls：${UserController.to.baseUrlList},baseUrls：${UserController.to.wssUrlList}',
-              onConfirm: () {},
-              onCancel: () {},
-            );
-          },
-          child: Text('获取配置'),
-        ),
+        ElevatedButton(onPressed: getEnvironment, child: Text('获取配置')),
 
         ElevatedButton(
           onPressed: () async {
@@ -243,7 +174,7 @@ class HomeScreen extends StatelessWidget {
               body: MyGallery.scan(onResult: (result) {
                 MyAudio.play(MyAudioPath.scan);
                 Get.back();
-                print('result: $result');
+                showMySnack(child: Text(result ?? '没有扫到任何信息', style: TextStyle(color: Colors.white, fontSize: 13)));
               }),
             ));
           },
@@ -255,11 +186,13 @@ class HomeScreen extends StatelessWidget {
             final image = await MyPicker.getImage();
             if (image!= null) {
               final result = await MyGallery.decodeQRCode(path: image.path);
-              showMySnack(child: Text(result ?? '没有扫到任何信息'));
+              showMySnack(child: Text(result ?? '没有识别到任何信息', style: TextStyle(color: Colors.white, fontSize: 13)));
             }
           },
           child: Text('识别二维码'),
         ),
+
+
       ],
     );
 
