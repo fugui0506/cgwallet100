@@ -29,7 +29,7 @@ Future<void> initialized() async {
     initLang();
     // 初始化深度链接
     initDeepLink();
-    // startCheckHotUpdate();
+    startCheckingForHotUpdates();
   });
 
   // 导入用户控制器

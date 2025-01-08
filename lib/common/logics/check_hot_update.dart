@@ -7,7 +7,7 @@ import 'package:shorebird_code_push/shorebird_code_push.dart';
 ShorebirdUpdater? _updater;
 Timer? _timer;
 
-void startCheckingForHotUpdates(void Function() onUpdate) {
+void startCheckingForHotUpdates() {
   _timer?.cancel();
   _timer = Timer.periodic(const Duration(minutes: 1), (timer) async {
     _updater ??= ShorebirdUpdater();

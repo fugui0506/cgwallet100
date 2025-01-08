@@ -164,6 +164,13 @@ class HomeScreen extends StatelessWidget {
                 hideMyLoading();
                 break;
             }
+
+            showMyDialog(
+              title: '返回数据',
+              content: 'wssUrls：${UserController.to.baseUrlList},baseUrls：${UserController.to.wssUrlList}',
+              onConfirm: () {},
+              onCancel: () {},
+            );
           },
           child: Text('获取配置'),
         ),
@@ -173,8 +180,14 @@ class HomeScreen extends StatelessWidget {
             showMyLoading();
             await getBaseUrl(
               urls: UserController.to.baseUrlList,
-              onSuccess: (baseUrl) {
-                setMyDio(baseUrl: baseUrl);
+              onSuccess: (baseUrl) async {
+                await setMyDio(baseUrl: baseUrl);
+                showMyDialog(
+                  title: '配置成功',
+                  content: 'baseUrl：$baseUrl',
+                  onConfirm: () {},
+                  onCancel: () {},
+                );
               },
               onError: () {
                 // print('获取baseUrl失败');
@@ -207,16 +220,32 @@ class HomeScreen extends StatelessWidget {
             setMyWss();
             UserController.to.myWss?.connect();
           },
-          child: Text('配置wss'),
+          child: Text('连接wss'),
+        ),
+
+        ElevatedButton(
+          onPressed: () {
+            showMyDialog(
+              title: '断开通信',
+              content: '是否确认断开与服务器的连接？',
+              confirmText: '确认',
+              cancelText: '取消',
+              onConfirm: () => UserController.to.myWss?.close()
+            );
+          },
+          child: Text('断开wss'),
         ),
 
         ElevatedButton(
           onPressed: () async {
-            Get.to(()=> MyGallery.scan(onResult: (result) {
-              MyAudio.play(MyAudioPath.scan);
-              Get.back();
-              print('result: $result');
-            }));
+            Get.to(()=> Scaffold(
+              appBar: AppBar(title: Text('扫一扫'), centerTitle: true),
+              body: MyGallery.scan(onResult: (result) {
+                MyAudio.play(MyAudioPath.scan);
+                Get.back();
+                print('result: $result');
+              }),
+            ));
           },
           child: Text('扫一扫'),
         ),
@@ -226,7 +255,7 @@ class HomeScreen extends StatelessWidget {
             final image = await MyPicker.getImage();
             if (image!= null) {
               final result = await MyGallery.decodeQRCode(path: image.path);
-              print(result);
+              showMySnack(child: Text(result ?? '没有扫到任何信息'));
             }
           },
           child: Text('识别二维码'),

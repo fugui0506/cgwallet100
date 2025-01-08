@@ -13,7 +13,19 @@ void setMyWss() {
     isCanConnect: _isCanConnect,
     headers: _headers(),
     heartbeatMessage: _heartbeatMessage(),
-    onMessageReceived: (message) => _onMessageReceived(message)
+    onMessageReceived: (message) => _onMessageReceived(message),
+    onMaxRetryOut: _onMaxRetryOut
+  );
+}
+
+void _onMaxRetryOut() {
+  showMyDialog(
+    title: '连接超时',
+    content: '请检查您的网络连接并重试',
+    confirmText: '重试',
+    onConfirm: () {
+      UserController.to.myWss?.reset();
+    }
   );
 }
 
