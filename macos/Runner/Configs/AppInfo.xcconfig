@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = cgwallet100
+PRODUCT_NAME = my_flutter_basic100
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.cgwallet.app.cgwallet100
+PRODUCT_BUNDLE_IDENTIFIER = com.my_flutter_basic.app.my_flutter_basic100
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2024 com.cgwallet.app. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2024 com.my_flutter_basic.app. All rights reserved.

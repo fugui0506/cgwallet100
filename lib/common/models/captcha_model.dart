@@ -1,4 +1,4 @@
-import 'package:cgwallet/common/common.dart';
+import 'package:my_flutter_basic/common/common.dart';
 
 class CaptchaModel {
   CaptchaModel({

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cgwallet/common/common.dart';
+import 'package:my_flutter_basic/common/common.dart';
 import 'package:my_device_info/my_device_info.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
 

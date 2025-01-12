@@ -8,7 +8,7 @@ class _Key {
   // 网易易盾行为验证码
   final String captchaKey = 'd5c288353d414d7a8c277de23430de64';
   // 二维码前缀
-  final String qrcodeKey = 'cgwallet';
+  final String qrcodeKey = 'my_flutter_basic';
   // 极光推送
   final String jpushAppKey = '9063f684484f2bf6833785c2';
   // 缓存管理

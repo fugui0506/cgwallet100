@@ -19,7 +19,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>王富贵钱包</string>
+	<string>我的框架</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -27,7 +27,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>cgwallet</string>
+	<string>my_flutter_basic</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -64,10 +64,10 @@
             <key>CFBundleTypeRole</key>
             <string>Editor</string>
             <key>CFBundleURLName</key>
-            <string>com.flutter.app.cgwallet</string>
+            <string>com.project.my.flutter.basic</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>appchemecgwallet</string>
+                <string>appchememy_flutter_basic</string>
             </array>
         </dict>
     </array>

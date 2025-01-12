@@ -50,10 +50,10 @@
             <key>CFBundleTypeRole</key>
             <string>Editor</string>
             <key>CFBundleURLName</key>
-            <string>com.cgwallet.app.cgwallet100</string>
+            <string>com.my_flutter_basic.app.my_flutter_basic100</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>appchemecgwallet</string>
+                <string>appchememy_flutter_basic</string>
             </array>
         </dict>
     </array>

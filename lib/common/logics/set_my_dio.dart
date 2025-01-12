@@ -1,4 +1,4 @@
-import 'package:cgwallet/common/common.dart';
+import 'package:my_flutter_basic/common/common.dart';
 import 'package:my_device_info/my_device_info.dart';
 import 'package:my_utils/my_utils.dart';
 
