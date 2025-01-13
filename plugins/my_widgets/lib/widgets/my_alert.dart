@@ -121,7 +121,7 @@ class _MyAlertState extends State<MyAlert> with TickerProviderStateMixin {
         width: 60,
         height: 60,
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.3),
+          color: Colors.black.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(10),
         ),
         child: const Center(
@@ -138,11 +138,11 @@ class _MyAlertState extends State<MyAlert> with TickerProviderStateMixin {
       ? Container(
         width: double.infinity,
         height: double.infinity,
-        color: Colors.black.withOpacity(0.1),
+        color: Colors.black.withValues(alpha: 0.1),
         child: loadingBox,
       ) : const SizedBox();
 
-    final block = _isShowBlock ? Container(color: Colors.black.withOpacity(0.1)) : const SizedBox();
+    final block = _isShowBlock ? Container(color: Colors.black.withValues(alpha: 0.1)) : const SizedBox();
 
     return Stack(
       children: [

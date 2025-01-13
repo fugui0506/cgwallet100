@@ -1,6 +1,5 @@
-import 'package:cgwallet/common/logics/set_my_wss.dart';
-import 'package:cgwallet/common/logics/set_theme.dart';
-import 'package:cgwallet/common/models/captcha_model.dart';
+import 'package:my_flutter_basic/common/logics/set_my_wss.dart';
+import 'package:my_flutter_basic/common/models/captcha_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_device_info/my_device_info.dart';
@@ -21,7 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: '王富贵钱包',
+      title: '我的框架',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.blue,

@@ -1,4 +1,4 @@
-package com.flutter.app.cgwallet
+package com.project.my.flutter.basic
 
 import io.flutter.embedding.android.FlutterActivity
 

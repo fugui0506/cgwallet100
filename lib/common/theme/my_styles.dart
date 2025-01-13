@@ -13,7 +13,7 @@ class MyStyles {
   TextStyle get inputBankTitle => TextStyle(color: _myColors.inputText, fontSize: 14);
 
   TextStyle get label => TextStyle(color: _myColors.textDefault, fontSize: 14, height: 0);
-  TextStyle get labelSmall => TextStyle(color: _myColors.textDefault.withOpacity(0.6), fontSize: 14, height: 0);
+  TextStyle get labelSmall => TextStyle(color: _myColors.textDefault.withValues(alpha: 0.6), fontSize: 14, height: 0);
   TextStyle get labelBig => TextStyle(color: _myColors.textDefault, fontSize: 16, height: 0);
   TextStyle get labelBigger => TextStyle(color: _myColors.textDefault, fontSize: 18, height: 0);
   TextStyle get labelBiggest => TextStyle(color: _myColors.textDefault, fontSize: 22, height: 0);
@@ -37,7 +37,7 @@ class MyStyles {
 
   TextStyle get content => TextStyle(color: _myColors.textDefault, fontSize: 14, height: 1.5);
   TextStyle get contentLight => TextStyle(color: _myColors.light, fontSize: 14, height: 1.5);
-  TextStyle get contentSmall => TextStyle(color: _myColors.textDefault.withOpacity(0.6), fontSize: 14, height: 1.5);
+  TextStyle get contentSmall => TextStyle(color: _myColors.textDefault.withValues(alpha: 0.6), fontSize: 14, height: 1.5);
   TextStyle get contentBig => TextStyle(color: _myColors.textDefault, fontSize: 16, height: 1.5);
   TextStyle get contentBigger => TextStyle(color: _myColors.textDefault, fontSize: 18, height: 1.5);
   TextStyle get contentBiggest => TextStyle(color: _myColors.textDefault, fontSize: 22, height: 1.5);

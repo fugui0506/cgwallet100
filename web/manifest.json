@@ -1,6 +1,6 @@
 {
-    "name": "cgwallet100",
-    "short_name": "cgwallet100",
+    "name": "my_flutter_basic100",
+    "short_name": "my_flutter_basic100",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

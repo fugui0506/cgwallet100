@@ -178,7 +178,7 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           boxShadow: [BoxShadow(
-            color: Colors.brown.withOpacity(0.2),
+            color: Colors.brown.withValues(alpha: 0.2),
             offset: const Offset(0, 0),
             blurRadius: 24,
           )],
@@ -207,7 +207,7 @@ class _MyTurntableState extends State<MyTurntable> with SingleTickerProviderStat
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 boxShadow: [BoxShadow(
-                  color: Colors.deepOrange.withOpacity(0.5),
+                  color: Colors.deepOrange.withValues(alpha: 0.5),
                   offset: const Offset(0, 0),
                   blurRadius: 8,
                 )],

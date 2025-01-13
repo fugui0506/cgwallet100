@@ -1,4 +1,4 @@
-import 'package:cgwallet/common/common.dart';
+import 'package:my_flutter_basic/common/common.dart';
 import 'package:get/get.dart';
 import 'package:my_utils/utils/utils.dart';
 

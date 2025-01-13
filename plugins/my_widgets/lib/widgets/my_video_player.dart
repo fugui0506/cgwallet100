@@ -101,7 +101,7 @@ class _MyVideoPlayerState extends State<MyVideoPlayer> {
 
     // 视频区的遮罩，主要是遮住封面图
     final mark = Container(
-      color: Colors.black.withOpacity(0.7),
+      color: Colors.black.withValues(alpha: 0.7),
       width: double.infinity,
       height: double.infinity,
     );

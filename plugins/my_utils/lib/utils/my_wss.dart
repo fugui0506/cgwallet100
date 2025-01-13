@@ -76,7 +76,7 @@ class MyWss {
     }
 
     if (_isConnecting) {
-      log("⚠️ wss: ${urls[_index]} 正在链接... ⚠️");
+      log("⚠️ wss: ${urls[_index]} 正在连接... ⚠️");
       return;
     }
 

@@ -35,7 +35,7 @@ class MyImage extends StatelessWidget {
       color: Colors.grey,
       width: width,
       height: height,
-      child: FittedBox(child: Padding(padding: EdgeInsets.all(8), child: Icon(Icons.broken_image, color: Colors.black.withOpacity(0.3)))),
+      child: FittedBox(child: Padding(padding: EdgeInsets.all(8), child: Icon(Icons.broken_image, color: Colors.black.withValues(alpha: 0.3)))),
     );
     try {
       return _KeepAliveWrapper(isAlive: isAlive, child: RepaintBoundary(
