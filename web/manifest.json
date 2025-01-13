@@ -1,6 +1,6 @@
 {
-    "name": "my_flutter_basic100",
-    "short_name": "my_flutter_basic100",
+    "name": "my_flutter_basic",
+    "short_name": "my_flutter_basic",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

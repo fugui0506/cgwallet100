@@ -50,7 +50,7 @@
             <key>CFBundleTypeRole</key>
             <string>Editor</string>
             <key>CFBundleURLName</key>
-            <string>com.my_flutter_basic.app.my_flutter_basic100</string>
+            <string>com.my_flutter_basic.app.my_flutter_basic</string>
             <key>CFBundleURLSchemes</key>
             <array>
                 <string>appchememy_flutter_basic</string>
