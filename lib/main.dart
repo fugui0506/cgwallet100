@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const HomeScreen(),
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.system,
       locale: Get.deviceLocale,
       fallbackLocale: MyLang.fallbackMode,
       localizationsDelegates: MyLang.localizationsDelegates,
